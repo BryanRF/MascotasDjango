@@ -11,7 +11,12 @@ class Persona(models.Model):
     fecha_nacimiento = models.DateField()
     genero = models.CharField(max_length=10, choices=[('masculino', 'Masculino'), ('femenino', 'Femenino'), ('otro', 'Otro')])
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
-
+    def save(self, *args, **kwargs):
+        self.nombre = ' '.join(part.capitalize() for part in self.nombre.split())
+        super().save(*args, **kwargs)
+    def clean(self):
+        self.email = self.email.lower().strip()
+        super().clean()
     def __str__(self):
         return self.nombre
 
@@ -124,6 +129,7 @@ class VisitaAdopcion(models.Model):
     fecha_visita = models.DateField()
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)  
     adoptante = models.ForeignKey(Persona, on_delete=models.CASCADE)  
+    asistio = models.BooleanField(default=False,null=True) 
 
     def __str__(self):
         return f"Visita el {self.fecha_visita} de adopción para {self.mascota.nombre} por {self.adoptante.nombre}."

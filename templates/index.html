@@ -88,7 +88,7 @@
         </div>
 
         <ul class="filters_menu">
-          <li class="active" data-filter="*">All</li>
+          <li class="active" data-filter="*">Todos</li>
           {% for especie in especies %}
           <li data-filter=".{{ especie.nombre }}">{{ especie.nombre }}</li>
           {% endfor %}
@@ -121,15 +121,20 @@
                   <div class="options mt-3">
                     <h6>CODIGO: {{ mascota.codigo }}</h6>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                      <button class="btn btn-warning text-white copy-code-button" title='copiar codigo' data-code="{{ mascota.codigo }}">
+                      <button class="btn btn-secondary text-white copy-code-button" title='copiar codigo' data-code="{{ mascota.codigo }}">
                         <i class="bi bi-clipboard-fill"></i></button> 
                       {% if user.is_authenticated %}
-                      <button class="btn btn-warning text-white">
+                      <button class="btn btn-secondary text-white">
                         <i class="bi bi-eye-fill"></i>
                       </button>
                       {% endif %}
-                      <button class="btn btn-warning text-danger row" onclick="likeMascota('{{ mascota.id }}')">
-                        <i class="bi bi-suit-heart-fill"></i> <span id='like-{{ mascota.id }}'> {{ mascota.likes }}</span>
+                  
+                      <button onclick="likeMascota('{{ mascota.id }}')" type="button" class="btn btn-danger text-white position-relative">
+                        <i class="bi bi-suit-heart-fill"></i>
+                        <span id='like-{{ mascota.id }}'
+                         class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-secondary text-white">
+                          {{ mascota.likes }}
+                        </span>
                       </button>
                     </div>
                     
@@ -142,7 +147,7 @@
         </div>
 
         <div class="btn-box">
-          <a href=""> Ver mas </a>
+          <a href="{% url 'mascotas' %}"> Ver mas </a>
         </div>
       </div>
     </section>

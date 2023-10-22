@@ -25,22 +25,18 @@ class PersonaView(View):
     def post(self, request):
         try:
             data = json.loads(request.body)
-            username = data.get('username')
-            print(username)
-            print(username)
-            print(username)
-            print(username)
-            print(username)
-            print(username)
-            print(username)
-            password = data.get('password')
-            nombre = data.get('nombre')
-            telefono = data.get('telefono')
-            dni = data.get('dni')
-            email = data.get('email')
-            fecha_nacimiento = data.get('fechaNacimiento')
-            genero = data.get('genero')
-
+            username = data.get('username').strip()
+            password = data.get('password').strip()
+            nombre = data.get('nombre').strip()
+            telefono = data.get('telefono').strip()
+            dni = data.get('dni').strip()
+            email = data.get('email').strip()
+            fecha_nacimiento = data.get('fechaNacimiento').strip()
+            genero = data.get('genero').strip()
+            # ajustar parametros 
+            nombre = ' '.join(part.capitalize() for part in nombre.split())
+            email = email.lower()
+            username = username.lower()
             # Crear un nuevo usuario
             user = User.objects.create_user(username, email, password)
             
@@ -89,3 +85,45 @@ class LoginView(View):
     def get(self,request):
         logout(request)
         return redirect(reverse('inicio'))  # Puedes redirigir a donde desees después del cierre de sesión
+    
+    
+@method_decorator(csrf_exempt, name='dispatch')
+class MascotasDataTablesView(View):
+     def get(self, request):
+        mascotas = Mascota.objects.all()
+        data = []
+        draw = int(request.GET.get('draw', 1))  # Obtener el número de solicitud (draw)
+        start = int(request.GET.get('start', 0))  # Índice de inicio de registros
+        length = int(request.GET.get('length', 10)) 
+        total_registros = Mascota.objects.count()
+
+        # Filtrar registros si se proporciona algún criterio de búsqueda
+        # Por ejemplo, si DataTables envía un parámetro de búsqueda como request.GET.get('search[value]')
+        # puedes usar ese valor para realizar la búsqueda
+        # mascotas = Mascota.objects.filter(nombre__icontains=request.GET.get('search[value]'))
+
+        # Obtener registros paginados
+        mascotas = Mascota.objects.all()[start:start + length]
+        for mascota in mascotas:
+            data.append({
+                'codigo': mascota.codigo,
+                'imagen': mascota.imagen_set.first().imagen.url,
+                'nombre': mascota.nombre,
+                'especie': mascota.especie.nombre,
+                'edad': mascota.edad,
+                'descripcion': mascota.descripcion,
+                'disponible': mascota.disponible,
+                'color': mascota.color,
+                'tamano': mascota.tamano,
+                'genero': mascota.genero,
+                'likes': mascota.likes,
+                'id': mascota.id
+            })
+        response = {
+            'draw': draw,
+            'recordsTotal': total_registros,
+            'recordsFiltered': total_registros,  # En este caso, no hay filtrado, así que es igual a total_registros
+            'data': data
+        }    
+
+        return JsonResponse(response, safe=False)
