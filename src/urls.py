@@ -6,7 +6,7 @@ from django.urls import path, include,re_path
 from .views import InicioView
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),  # Reemplaza 'nombre_de_tu_aplicacion' con el nombre de tu aplicación
+    path('api/', include('api.urls')),  
     # re_path(r'^(?P<path>.*)$', views.page_not_found),
     path('', InicioView.as_view(), name='inicio'),
 ]

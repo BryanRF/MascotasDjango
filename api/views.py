@@ -1,135 +1,91 @@
 from django.views import View
 from django.http import JsonResponse
-from .models import Persona, Mascota, Imagen, Comentario, Etiqueta
+from .models import  Mascota,Persona,User
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-
-
-# Decorador para desactivar CSRF (Solo para propósitos de ejemplo, NO lo hagas en un proyecto real sin medidas de seguridad adicionales)
-@method_decorator(csrf_exempt, name='dispatch')
-class PersonaView(View):
-    def get(self, request):
-        personas = Persona.objects.all()
-        data = [{'id': persona.id, 'nombre': persona.nombre, 'direccion': persona.direccion, 
-                 'telefono': persona.telefono, 'email': persona.email} for persona in personas]
-        return JsonResponse(data, safe=False)
-
-    def post(self, request):
-        nombre = request.POST.get('nombre')
-        direccion = request.POST.get('direccion')
-        telefono = request.POST.get('telefono')
-        email = request.POST.get('email')
-        persona = Persona(nombre=nombre, direccion=direccion, telefono=telefono, email=email)
-        persona.save()
-        return JsonResponse({'message': 'Persona creada exitosamente!'})
-
-    def put(self, request):
-        persona_id = request.POST.get('id')
-        try:
-            persona = Persona.objects.get(id=persona_id)
-        except ObjectDoesNotExist:
-            return JsonResponse({'error': 'Persona no encontrada'}, status=404)
-
-        nombre = request.POST.get('nombre')
-        direccion = request.POST.get('direccion')
-        telefono = request.POST.get('telefono')
-        email = request.POST.get('email')
-
-        persona.nombre = nombre
-        persona.direccion = direccion
-        persona.telefono = telefono
-        persona.email = email
-        persona.save()
-
-        return JsonResponse({'message': 'Persona actualizada exitosamente!'})
-
-    def delete(self, request):
-        persona_id = request.POST.get('id')
-        try:
-            persona = Persona.objects.get(id=persona_id)
-        except ObjectDoesNotExist:
-            return JsonResponse({'error': 'Persona no encontrada'}, status=404)
-
-        persona.delete()
-        return JsonResponse({'message': 'Persona eliminada exitosamente!'})
-
-
+import json
+from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+from django.urls import reverse
 @method_decorator(csrf_exempt, name='dispatch')
 class MascotaView(View):
-    def get(self, request):
-        mascotas = Mascota.objects.all()
-        data = [{'id': mascota.id, 'nombre': mascota.nombre, 'especie': mascota.especie, 
-                 'codigo': mascota.codigo, 'codigo': mascota.edad, 'descripcion': mascota.descripcion,
-                 'disponible': mascota.disponible, 'color': mascota.color, 'tamano': mascota.tamano,
-                 'persona': mascota.especie.nombre if mascota.especie else None} for mascota in mascotas]
-        return JsonResponse(data, safe=False)
+    def put(self, request, mascota_id):
+        try:
+            mascota = Mascota.objects.get(id=mascota_id)
+        except ObjectDoesNotExist:
+            return JsonResponse({'error': 'Mascota no encontrada'}, status=404)
 
+        mascota.like()
+        return JsonResponse({'message': '¡Like agregado!', 'likes': mascota.likes})
+    
+@method_decorator(csrf_exempt, name='dispatch')
+class PersonaView(View):
     def post(self, request):
-        nombre = request.POST.get('nombre')
-        especie = request.POST.get('especie')
-        codigo = request.POST.get('codigo')
-        edad = request.POST.get('edad')
-        descripcion = request.POST.get('descripcion')
-        disponible = request.POST.get('disponible')
-        color = request.POST.get('color')
-        tamano = request.POST.get('tamano')
-
-        persona = None
-        if persona_id:
-            try:
-                persona = Persona.objects.get(id=persona_id)
-            except ObjectDoesNotExist:
-                return JsonResponse({'error': 'Persona no encontrada'}, status=404)
-
-        mascota = Mascota(nombre=nombre, especie=especie, codigo=codigo, edad=edad, descripcion=descripcion, 
-                          disponible=disponible, color=color, tamano=tamano, persona=persona)
-        mascota.save()
-        return JsonResponse({'message': 'Mascota creada exitosamente!'})
-
-    def put(self, request):
-        mascota_id = request.POST.get('id')
         try:
-            mascota = Mascota.objects.get(id=mascota_id)
-        except ObjectDoesNotExist:
-            return JsonResponse({'error': 'Mascota no encontrada'}, status=404)
+            data = json.loads(request.body)
+            username = data.get('username')
+            print(username)
+            print(username)
+            print(username)
+            print(username)
+            print(username)
+            print(username)
+            print(username)
+            password = data.get('password')
+            nombre = data.get('nombre')
+            telefono = data.get('telefono')
+            dni = data.get('dni')
+            email = data.get('email')
+            fecha_nacimiento = data.get('fechaNacimiento')
+            genero = data.get('genero')
 
-        nombre = request.POST.get('nombre')
-        especie = request.POST.get('especie')
-        codigo = request.POST.get('codigo')
-        edad = request.POST.get('edad')
-        descripcion = request.POST.get('descripcion')
-        disponible = request.POST.get('disponible')
-        color = request.POST.get('color')
-        tamano = request.POST.get('tamano')
-        persona_id = request.POST.get('persona_id')
+            # Crear un nuevo usuario
+            user = User.objects.create_user(username, email, password)
+            
+            # Crear una nueva persona asociada al usuario
+            persona = Persona(
+                user=user,
+                nombre=nombre,
+                telefono=telefono,
+                dni=dni,
+                email=email,
+                fecha_nacimiento=fecha_nacimiento,
+                genero=genero
+            )
+            persona.save()
 
-        persona = None
-        if persona_id:
-            try:
-                persona = Persona.objects.get(id=persona_id)
-            except ObjectDoesNotExist:
-                return JsonResponse({'error': 'Persona no encontrada'}, status=404)
+            print('Registro exitoso')
+            print(user)
 
-        mascota.nombre = nombre
-        mascota.especie = especie
-        mascota.codigo = codigo
-        mascota.edad = edad
-        mascota.descripcion = descripcion
-        mascota.disponible = disponible
-        mascota.color = color
-        mascota.tamano = tamano
-        mascota.persona = persona
-        mascota.save()
+            return JsonResponse({'success': True})
+        except Exception as e:
+            print(f'Error: {str(e)}')
+            return JsonResponse({'success': False, 'error': str(e)})
 
-        return JsonResponse({'message': 'Mascota actualizada exitosamente!'})
+@method_decorator(csrf_exempt, name='dispatch')
+class LoginView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        username_or_email = data.get('username_or_email')
+        password = data.get('password')
 
-    def delete(self, request):
-        mascota_id = request.POST.get('id')
-        try:
-            mascota = Mascota.objects.get(id=mascota_id)
-        except ObjectDoesNotExist:
-            return JsonResponse({'error': 'Mascota no encontrada'}, status=404)
+        # Verifica si el campo ingresado es un nombre de usuario o un correo electrónico
+        user = None
+        if '@' in username_or_email:
+            user = authenticate(request, email=username_or_email, password=password)
+        else:
+            user = authenticate(request, username=username_or_email, password=password)
 
-        mascota.delete()
-        return JsonResponse({'message': 'Mascota eliminada exitosamente!'})
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'error': 'Credenciales incorrectas'})
+
+
+
+    def get(self,request):
+        logout(request)
+        return redirect(reverse('inicio'))  # Puedes redirigir a donde desees después del cierre de sesión

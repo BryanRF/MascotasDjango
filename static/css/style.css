@@ -141,12 +141,13 @@ a:focus {
 
 .header_section {
   padding: 15px 0;
-  background-color: rgba(0, 0, 0, 0.719); /* Color oscuro semi-transparente */
+  background: rgba(0, 0, 0, 0.719); /* Color oscuro semi-transparente */
 }
 
 .header_section .container-fluid {
   padding-right: 25px;
   padding-left: 25px;
+
 }
 
 .navbar-brand {
@@ -178,7 +179,7 @@ a:focus {
 }
 
 .custom_nav-container .navbar-nav .nav-item:hover .nav-link, .custom_nav-container .navbar-nav .nav-item.active .nav-link {
-  color: #ffbe33;
+  color: #3f3318;
 }
 
 .custom_nav-container .nav_search-btn {
@@ -191,7 +192,7 @@ a:focus {
 }
 
 .custom_nav-container .nav_search-btn:hover {
-  color: #ffbe33;
+  color: #201805;
 }
 
 .user_option {

@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from django.contrib.auth.models import User
 
 class Persona(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
@@ -9,6 +10,7 @@ class Persona(models.Model):
     email = models.EmailField()
     fecha_nacimiento = models.DateField()
     genero = models.CharField(max_length=10, choices=[('masculino', 'Masculino'), ('femenino', 'Femenino'), ('otro', 'Otro')])
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.nombre
@@ -118,3 +120,10 @@ class EvaluacionAdopcion(models.Model):
         return f'Evaluación de adopción de {self.adopcion.mascota.nombre} por {self.adopcion.usuario_adoptante.nombre}'
 
 
+class VisitaAdopcion(models.Model):
+    fecha_visita = models.DateField()
+    mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)  
+    adoptante = models.ForeignKey(Persona, on_delete=models.CASCADE)  
+
+    def __str__(self):
+        return f"Visita el {self.fecha_visita} de adopción para {self.mascota.nombre} por {self.adoptante.nombre}."
