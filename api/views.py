@@ -9,6 +9,9 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.urls import reverse
+from .serializers import PersonaSerializer,MascotaSerializer
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import generics
 @method_decorator(csrf_exempt, name='dispatch')
 class MascotaView(View):
     def put(self, request, mascota_id):
@@ -60,6 +63,17 @@ class PersonaView(View):
             print(f'Error: {str(e)}')
             return JsonResponse({'success': False, 'error': str(e)})
 
+    def get(self, request, id):
+        try:
+            # Obtener la persona por su ID
+            persona = Persona.objects.get(id=id)
+            # Serializar los datos de la persona
+            serializer = PersonaSerializer(persona)  # Asegúrate de tener un serializer para Persona definido
+            # Devolver los datos serializados como respuesta JSON
+            return JsonResponse(serializer.data)
+        except Persona.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'La persona no existe'})
+        
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginView(View):
     def post(self, request):
@@ -127,3 +141,9 @@ class MascotasDataTablesView(View):
         }    
 
         return JsonResponse(response, safe=False)
+
+class MascotaAPIView(generics.ListAPIView):
+    serializer_class = MascotaSerializer
+    queryset = Mascota.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['especie__nombre', 'codigo']

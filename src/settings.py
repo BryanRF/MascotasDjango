@@ -29,7 +29,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*','http://192.168.101.8']
 
-
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,  # Puedes ajustar el tamaño de la página según tus preferencias
+}
 
 
 # Application definition

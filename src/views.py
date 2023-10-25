@@ -3,9 +3,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.generic import ListView
 from api.models import Mascota,Especie
-
-
-
+from .form import MascotaFilterForm
 
 class InicioView(ListView):
     model = Mascota
@@ -25,13 +23,17 @@ class MascotasView(ListView):
     model = Mascota
     template_name = 'mascotas.html'
     context_object_name = 'mascotas'
+    paginate_by = 6
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        form = MascotaFilterForm(self.request.GET)  # Inicializa el formulario con los datos de la solicitud
+        mascotas = Mascota.objects.all()  # Obtener todas las mascotas
         # Obtener las especies con al menos una mascota registrada
         especies_con_mascotas = Especie.objects.filter(mascota__isnull=False).distinct()
+        context['form'] = form
+        context['mascotas'] = mascotas
         context['especies'] = especies_con_mascotas
-        # Filtrar solo 6 mascotas por especie
-        context['mascotas'] = Mascota.objects.all()
         return context
 
 class MascotasDataTablesView(ListView):
