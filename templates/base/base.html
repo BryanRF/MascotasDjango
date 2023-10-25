@@ -23,10 +23,7 @@
     />
 
     <title>Adopcion Responsable</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
-    />
+    
     <!-- bootstrap core css -->
 
     <!--owl slider stylesheet -->
@@ -301,133 +298,7 @@
 
     <!-- y así sucesivamente para otros campos -->
 
-    <script>
-      document.getElementById('registerButton').addEventListener('click', function() {
-        Swal.fire({
-          title: 'Registro de Usuario ',
-          html:
-          '<input id="swal-input1" class="swal2-input"  placeholder="Usuario" required>' +
-          '<input id="swal-input2" class="swal2-input"  placeholder="Contraseña" type="password" required>' +
-          '<input id="swal-input3" class="swal2-input"  placeholder="Nombre Completo" required>' +
-          '<input id="swal-input4" class="swal2-input"  placeholder="Teléfono" required>' +
-          '<input id="swal-input5" class="swal2-input" placeholder="DNI" required>' +
-          '<input id="swal-input6" class="swal2-input" placeholder="Email" required>' +
-          '<input id="swal-input7" class="swal2-input"  type="date" required>' +
-          '<select id="swal-input8" class="swal2-input" required>' +
-            '<option value="masculino" >Masculino</option>' +
-            '<option value="femenino">Femenino</option>' +
-            '<option value="otro">Otro</option>' +
-          '</select>',
-          showCancelButton: true,
-          clickOutsideToClose: false, // Evita que se cierre al hacer clic fuera
-          confirmButtonText: 'Registrar',
-          preConfirm: () => {
-            const username = Swal.getPopup().querySelector('#swal-input1').value;
-            const password = Swal.getPopup().querySelector('#swal-input2').value;
-            const nombre = Swal.getPopup().querySelector('#swal-input3').value;
-            const telefono = Swal.getPopup().querySelector('#swal-input4').value;
-            const dni = Swal.getPopup().querySelector('#swal-input5').value;
-            const email = Swal.getPopup().querySelector('#swal-input6').value;
-            const fechaNacimiento = Swal.getPopup().querySelector('#swal-input7').value;
-            const genero = Swal.getPopup().querySelector('#swal-input8').value;
-        
-            // Construye los datos que enviarás al servidor
-            const data = {
-                username: username,
-                password: password,
-                nombre: nombre,
-                telefono: telefono,
-                dni: dni,
-                email: email,
-                fechaNacimiento: fechaNacimiento,
-                genero: genero
-            };
-            console.log(data)
-            // Realiza la solicitud fetch
-            fetch('api/registro_usuario/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                  Swal.fire({
-                      icon: 'success',
-                      title: 'Registro exitoso',
-                      text: '¡Tu registro ha sido exitoso!',
-                      showConfirmButton: false,
-                      timer: 2000
-                  });
-                  // Aquí puedes hacer lo que necesites después de registrar los datos
-              } else {
-                  Swal.fire({
-                      icon: 'error',
-                      title: 'Error',
-                      text: 'Ocurrió un error durante el registro',
-                  });
-              }
-          })
-          
-            .catch(error => console.error('Error:', error));
-        }
-        
-        })
-      });
-      document.getElementById('loginButton').addEventListener('click', function() {
-        Swal.fire({
-            title: 'Inicio de Sesión',
-            html:
-            '<input id="swal-username" class="swal2-input" placeholder="Usuario o Correo Electrónico">' +
-            '<input id="swal-password" class="swal2-input" placeholder="Contraseña" type="password">',
-            showCancelButton: true,
-            confirmButtonText: 'Iniciar Sesión',
-            preConfirm: () => {
-                const username_or_email = Swal.getPopup().querySelector('#swal-username').value;
-                const password = Swal.getPopup().querySelector('#swal-password').value;
-    
-                const data = {
-                    username_or_email: username_or_email,
-                    password: password
-                };
-    
-                fetch('api/login/', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    body: JSON.stringify(data)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Inicio de Sesión Exitoso',
-                            text: '¡Bienvenido!',
-                            showConfirmButton: false,
-                            timer: 2000
-                        });
-                        location.reload();
-                        // Aquí puedes redirigir al usuario o hacer lo que necesites después del inicio de sesión
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: data.error,
-                        });
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            }
-        });
-    });
-    
-      </script>
+
       
       
   </body>

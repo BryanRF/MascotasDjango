@@ -7,7 +7,7 @@ from .form import MascotaFilterForm
 
 class InicioView(ListView):
     model = Mascota
-    template_name = 'index.html'
+    template_name = 'inicio.html'
     context_object_name = 'mascotas'
     paginate_by = 6    
     def get_context_data(self, **kwargs):
@@ -17,6 +17,7 @@ class InicioView(ListView):
         context['especies'] = especies_con_mascotas
         # Filtrar solo 6 mascotas por especie
         context['mascotas'] = Mascota.objects.all()
+        context['mascotas_populares'] = Mascota.objects.order_by('-likes')[:4]
         return context
     
 class MascotasView(ListView):
