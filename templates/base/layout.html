@@ -1,226 +1,286 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es-ES" dir="ltr">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- ===============================================-->
+    <!--    Document Title-->
+    <!-- ===============================================-->
+    <title>Huellitas Sipanenses 😺🐶</title>
 
+    <!-- ===============================================-->
+    <!--    Favicons-->
+    <!-- ===============================================-->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="{% static 'icon/icon1.png' %}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="{% static 'icon/icon1.png' %}"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="{% static 'icon/icon1.ico' %}"
+    />
+    <link
+      rel="shortcut icon"
+      type="image/x-icon"
+      href="{% static 'icon/icon1.ico' %}"
+    />
+    <link
+      rel="manifest"
+      href="{% static 'assets/img/favicons/manifest.json' %}"
+    />
+    <meta
+      name="msapplication-TileImage"
+      content="{% static 'assets/img/favicons/mstile-150x150.png' %}"
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-  <!-- ===============================================-->
-  <!--    Document Title-->
-  <!-- ===============================================-->
-  <title>Huellitas Sipanenses 😺🐶</title>
+    <!-- ===============================================-->
+    <!--    Stylesheets-->
+    <!-- ===============================================-->
+    <link href="{% static 'assets/css/theme.css' %}" rel="stylesheet" />
+  </head>
+  <style>
+    .custom-badge {
+      display: inline-block;
+      padding: 0.25em 0.4em;
+      font-size: 75%;
+      font-weight: 700;
+      line-height: 1;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: baseline;
+      border-radius: 0.25rem;
+      background-color: #6c757d;
+      color: #ffffff;
+    }
+    .mascota-container {
+      height: 400px; /* Ajusta el valor según tus necesidades */
+    }
+    .mascota-container img {
+      max-height: 100%;
+    }
+    .mascota-container h5,
+    .mascota-container p {
+      max-height: 50px; /* Ajusta el valor según tus necesidades */
+      overflow: hidden;
+    }
+  </style>
 
+  <body>
+    <!-- ===============================================-->
+    <!--    Main Content-->
+    <!-- ===============================================-->
+    <main class="main" id="top">
+      <nav
+        class="navbar navbar-expand-lg navbar-light bg-light fixed-top"
+        data-navbar-on-scroll="data-navbar-on-scroll"
+      >
+        <div class="container">
+          <a class="navbar-brand d-inline-flex" href="{% url 'inicio'  %}"
+            ><img
+              class="d-inline-block"
+              src="{% static 'icon/icon1.svg' %}"
+              alt="logo"
+            /><span class="text-1000 fs-3 fw-bold ms-2 text-gradient"
+              >Huellitas Sipanenses</span
+            ></a
+          >
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"> </span>
+          </button>
+          <div
+            class="collapse navbar-collapse border-top border-lg-0 my-2 mt-lg-0"
+            id="navbarSupportedContent"
+          >
+            <div class="mx-auto pt-5 pt-lg-0 d-block d-lg-none d-xl-block">
+              <p class="mb-0 fw-bold text-lg-center">
+                Ubicacion:
+                <i class="fas fa-map-marker-alt text-warning mx-2"></i
+                ><span class="fw-normal">Universidad </span
+                ><span> Señor de sipan</span>
+              </p>
+            </div>
+            <form class="d-flex mt-4 mt-lg-0 ms-lg-auto ms-xl-0">
+              {% if user.is_authenticated %}
+              <button
+                id="menuButton"
+                type="button"
+                class="btn btn-white shadow-warning text-warning"
+              >
+                {{ user.username }}
+              </button>
 
-  <!-- ===============================================-->
-  <!--    Favicons-->
-  <!-- ===============================================-->
-  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icon/icon1.png' %}">
-  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icon/icon1.png' %}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icon/icon1.ico' %}">
-  <link rel="shortcut icon" type="image/x-icon" href="{% static 'icon/icon1.ico' %}">
-  <link rel="manifest" href="{% static 'assets/img/favicons/manifest.json' %}">
-  <meta name="msapplication-TileImage" content="{% static 'assets/img/favicons/mstile-150x150.png' %}">
-  <meta name="theme-color" content="#ffffff">
-  <link
-  rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css"
-/>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+              <a
+                class="btn btn-white shadow-warning text-warning"
+                href="{% url 'logout_view' %}"
+              >
+                <i class="fas fa-user me-2"></i>Cerrar Sesión</a
+              >
+              {% else %}
 
-  <!-- ===============================================-->
-  <!--    Stylesheets-->
-  <!-- ===============================================-->
-  <link href="{% static 'assets/css/theme.css' %}" rel="stylesheet" />
-
-</head>
-<style>
-  .custom-badge {
-    display: inline-block;
-    padding: 0.25em 0.4em;
-    font-size: 75%;
-    font-weight: 700;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 0.25rem;
-    background-color: #6c757d;
-    color: #ffffff;
-}
-.mascota-container {
-    height: 400px; /* Ajusta el valor según tus necesidades */
-}
-.mascota-container img {
-    max-height: 100%;
-}
-.mascota-container h5,
-.mascota-container p {
-    max-height: 50px; /* Ajusta el valor según tus necesidades */
-    overflow: hidden;
-}
-
-</style>
-
-<body>
-
-  <!-- ===============================================-->
-  <!--    Main Content-->
-  <!-- ===============================================-->
-  <main class="main" id="top">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" data-navbar-on-scroll="data-navbar-on-scroll">
-      <div class="container"><a class="navbar-brand d-inline-flex" href="{% url 'inicio'  %}"><img class="d-inline-block"
-            src="{% static 'icon/icon1.svg' %}" alt="logo" /><span
-            class="text-1000 fs-3 fw-bold ms-2 text-gradient">Huellitas Sipanenses</span></a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
-            class="navbar-toggler-icon"> </span></button>
-        <div class="collapse navbar-collapse border-top border-lg-0 my-2 mt-lg-0" id="navbarSupportedContent">
-          <div class="mx-auto pt-5 pt-lg-0 d-block d-lg-none d-xl-block">
-            <p class="mb-0 fw-bold text-lg-center">Ubicacion: <i
-                class="fas fa-map-marker-alt text-warning mx-2"></i><span class="fw-normal">Universidad </span><span>
-                Señor de sipan</span></p>
+              <button
+                id="registerButton"
+                class="btn btn-white shadow-warning text-warning"
+                type="button"
+              >
+                <i class="fas fa-user me-2"></i>Registrate
+              </button>
+              <button
+                id="loginButton"
+                class="btn btn-white shadow-warning text-warning"
+                type="button"
+              >
+                <i class="fas fa-user me-2"></i>Ingresa
+              </button>
+              {% endif %}
+            </form>
           </div>
-          <form class="d-flex mt-4 mt-lg-0 ms-lg-auto ms-xl-0">
-           
-            {% if user.is_authenticated %}
-            <button id="menuButton" class="btn btn-white shadow-warning text-warning">{{ user.username }}</button>
-
-                    <a  class="btn btn-white shadow-warning text-warning" href="{% url 'logout_view' %}"> <i
-                      class="fas fa-user me-2"  ></i>Cerrar Sesión</a>
-                {% else %}
-                    
-                    <button id="registerButton" class="btn btn-white shadow-warning text-warning" type="button"> <i
-                      class="fas fa-user me-2"></i>Registrate</button>
-                    <button id="loginButton" class="btn btn-white shadow-warning text-warning" type="button"> <i
-                      class="fas fa-user me-2"></i>Ingresa</button>
-                {% endif %}
-            
-          </form>
         </div>
-      </div>
-    </nav>
+      </nav>
 
+      {% block content %} {% endblock %}
 
-     {% block content %}
-      {% endblock %} 
+      <!-- <section> close ============================-->
+      <!-- ============================================-->
 
-    <!-- <section> close ============================-->
-    <!-- ============================================-->
+      <!-- <section> close ============================-->
+      <!-- ============================================-->
+    </main>
+    <!-- ===============================================-->
+    <!--    End of Main Content-->
+    <!-- ===============================================-->
 
+    <!-- ===============================================-->
+    <!--    JavaScripts-->
+    <!-- ===============================================-->
+    <script src="{% static 'vendors/@popperjs/popper.min.js' %}"></script>
+    <script src="{% static 'vendors/bootstrap/bootstrap.min.js' %}"></script>
+    <script src="{% static 'vendors/is/is.min.js' %}"></script>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
+    <script src="{% static 'vendors/fontawesome/all.min.js' %}"></script>
+    <script src="{% static 'assets/js/theme.js' %}"></script>
 
-    <!-- <section> close ============================-->
-    <!-- ============================================-->
-
-
-  </main>
-  <!-- ===============================================-->
-  <!--    End of Main Content-->
-  <!-- ===============================================-->
-
-
-
-
-  <!-- ===============================================-->
-  <!--    JavaScripts-->
-  <!-- ===============================================-->
-  <script src="{% static 'vendors/@popperjs/popper.min.js' %}"></script>
-  <script src="{% static 'vendors/bootstrap/bootstrap.min.js' %}"></script>
-  <script src="{% static 'vendors/is/is.min.js' %}"></script>
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
-  <script src="{% static 'vendors/fontawesome/all.min.js' %}"></script>
-  <script src="{% static 'assets/js/theme.js' %}"></script>
-
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&amp;display=swap"
-    rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&amp;display=swap"
+      rel="stylesheet"
+    />
     <script>
-     
-  
-    
-  
-
-
       function likeMascota(mascotaId) {
         fetch(`mascota/mascota_like/${mascotaId}/`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: JSON.stringify({ mascota_id: mascotaId })
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken"),
+          },
+          body: JSON.stringify({ mascota_id: mascotaId }),
         })
-        .then(response => response.json())
-        .then(data => {
+          .then((response) => response.json())
+          .then((data) => {
             if (data.message) {
-                // Actualizar la interfaz de usuario si es necesario
-                var elementos = document.getElementsByClassName(`like-${mascotaId}`);
-                  for (var i = 0; i < elementos.length; i++) {
-                      elementos[i].textContent = data.likes;
-                  }
+              // Actualizar la interfaz de usuario si es necesario
+              var elementos = document.getElementsByClassName(
+                `like-${mascotaId}`
+              );
+              for (var i = 0; i < elementos.length; i++) {
+                elementos[i].textContent = data.likes;
+              }
 
-                // Mostrar la notificación de éxito
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Like Agregado',
-                  text: '¡Has dado like a esta mascota!, dale los me gusta que quieras :D',
-                  showConfirmButton: false,
-                  timer: 3000,
-                  iconHtml: '<i class="bi bi-suit-heart-fill"></i>' // Reemplaza con el código de tu corazón
-              });
-              
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-      document.querySelectorAll('.copy-code-button').forEach(button => {
-        button.addEventListener('click', () => {
-            const code = button.dataset.code;
-            const tempInput = document.createElement('input');
-            tempInput.value = code;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-
-            Swal.fire({
-                icon: 'success',
-                title: '¡Código copiado!',
-                text: 'El código se ha copiado al portapapeles correctamente.',
+              // Mostrar la notificación de éxito
+              Swal.fire({
+                icon: "error",
+                title: "Like Agregado",
+                text: "¡Has dado like a esta mascota!, dale los me gusta que quieras :D",
                 showConfirmButton: false,
-                timer: 1500
-            });
-        });
-    });
-      document.getElementById('registerButton').addEventListener('click', function() {
-        Swal.fire({
-          title: 'Registro de Usuario ',
-          confirmButtonColor: '#FFB30E',
-          cancelButtonColor: '#F17228',
-          html:
-          '<input id="swal-input1" class="swal2-input "  placeholder="Usuario" required>' +
-          '<input id="swal-input2" class="swal2-input "  placeholder="Contraseña" type="password" required>' +
-          '<input id="swal-input3" class="swal2-input"  placeholder="Nombre Completo" required>' +
-          '<input id="swal-input4" class="swal2-input"  placeholder="Teléfono" required>' +
-          '<input id="swal-input5" class="swal2-input" placeholder="DNI" required>' +
-          '<input id="swal-input6" class="swal2-input" placeholder="Email" required>' +
-          '<input id="swal-input7" class="swal2-input swal2-date"  type="date" required>' ,
+                timer: 3000,
+                iconHtml: '<i class="bi bi-suit-heart-fill"></i>', // Reemplaza con el código de tu corazón
+              });
+            }
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+      document.querySelectorAll(".copy-code-button").forEach((button) => {
+        button.addEventListener("click", () => {
+          const code = button.dataset.code;
+          const tempInput = document.createElement("input");
+          tempInput.value = code;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand("copy");
+          document.body.removeChild(tempInput);
 
-          showCancelButton: true,
-          clickOutsideToClose: false, // Evita que se cierre al hacer clic fuera
-          confirmButtonText: 'Registrar',
-          preConfirm: () => {
-            const username = Swal.getPopup().querySelector('#swal-input1').value;
-            const password = Swal.getPopup().querySelector('#swal-input2').value;
-            const nombre = Swal.getPopup().querySelector('#swal-input3').value;
-            const telefono = Swal.getPopup().querySelector('#swal-input4').value;
-            const dni = Swal.getPopup().querySelector('#swal-input5').value;
-            const email = Swal.getPopup().querySelector('#swal-input6').value;
-            const fechaNacimiento = Swal.getPopup().querySelector('#swal-input7').value;
-        
-            // Construye los datos que enviarás al servidor
-            const data = {
+          Swal.fire({
+            icon: "success",
+            title: "¡Código copiado!",
+            text: "El código se ha copiado al portapapeles correctamente.",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        });
+      });
+    </script>
+
+    {% if user.is_authenticated %} {% else %}
+    <script>
+      document
+        .getElementById("registerButton")
+        .addEventListener("click", function () {
+          Swal.fire({
+            title: "Registro de Usuario ",
+            confirmButtonColor: "#FFB30E",
+            cancelButtonColor: "#F17228",
+            html:
+              '<input id="swal-input1" class="swal2-input "  placeholder="Usuario" required>' +
+              '<input id="swal-input2" class="swal2-input "  placeholder="Contraseña" type="password" required>' +
+              '<input id="swal-input3" class="swal2-input"  placeholder="Nombre Completo" required>' +
+              '<input id="swal-input4" class="swal2-input"  placeholder="Teléfono" required>' +
+              '<input id="swal-input5" class="swal2-input" placeholder="DNI" required>' +
+              '<input id="swal-input6" class="swal2-input" placeholder="Email" required>' +
+              '<input id="swal-input7" class="swal2-input swal2-date"  type="date" required>',
+
+            showCancelButton: true,
+            clickOutsideToClose: false, // Evita que se cierre al hacer clic fuera
+            confirmButtonText: "Registrar",
+            preConfirm: () => {
+              const username =
+                Swal.getPopup().querySelector("#swal-input1").value;
+              const password =
+                Swal.getPopup().querySelector("#swal-input2").value;
+              const nombre =
+                Swal.getPopup().querySelector("#swal-input3").value;
+              const telefono =
+                Swal.getPopup().querySelector("#swal-input4").value;
+              const dni = Swal.getPopup().querySelector("#swal-input5").value;
+              const email = Swal.getPopup().querySelector("#swal-input6").value;
+              const fechaNacimiento =
+                Swal.getPopup().querySelector("#swal-input7").value;
+
+              // Construye los datos que enviarás al servidor
+              const data = {
                 username: username,
                 password: password,
                 nombre: nombre,
@@ -228,154 +288,238 @@
                 dni: dni,
                 email: email,
                 fechaNacimiento: fechaNacimiento,
-            };
-            console.log(data)
-            // Realiza la solicitud fetch
-            fetch('api/registro_usuario/', {
-                method: 'POST',
+              };
+              console.log(data);
+              // Realiza la solicitud fetch
+              fetch("api/registro_usuario/", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": getCookie("csrftoken"),
                 },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                  Swal.fire({
-                      icon: 'success',
-                      title: 'Registro exitoso',
-                      text: '¡Tu registro ha sido exitoso!',
+                body: JSON.stringify(data),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.success) {
+                    Swal.fire({
+                      icon: "success",
+                      title: "Registro exitoso",
+                      text: "¡Tu registro ha sido exitoso!",
                       showConfirmButton: false,
-                      timer: 2000
-                  });
-                  // Aquí puedes hacer lo que necesites después de registrar los datos
-              } else {
-                  Swal.fire({
-                      icon: 'error',
-                      title: 'Error',
-                      text: 'Ocurrió un error durante el registro',
-                  });
-              }
-          })
-          
-            .catch(error => console.error('Error:', error));
-        }
-        
-        })
-      });
-      document.getElementById('loginButton').addEventListener('click', function() {
-        Swal.fire({
-            title: 'Inicio de Sesión',
-            confirmButtonColor: '#FFB30E',
-          cancelButtonColor: '#F17228',
-            html:
-            '<input id="swal-username" class="swal2-input" placeholder="Usuario o Correo Electrónico">' +
-            '<input id="swal-password" class="swal2-input" placeholder="Contraseña" type="password">',
-            showCancelButton: true,
-            confirmButtonText: 'Iniciar Sesión',
-            preConfirm: () => {
-                const username = Swal.getPopup().querySelector('#swal-username').value;
-                const password = Swal.getPopup().querySelector('#swal-password').value;
-    
-                const data = {
-                    username: username,
-                    password: password
-                };
-    
-                fetch('persona/login/', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken')
-                    },
-                    body: JSON.stringify(data)
+                      timer: 2000,
+                    });
+                    // Aquí puedes hacer lo que necesites después de registrar los datos
+                  } else {
+                    Swal.fire({
+                      icon: "error",
+                      title: "Error",
+                      text: "Ocurrió un error durante el registro",
+                    });
+                  }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Inicio de Sesión Exitoso',
-                            text: '¡Bienvenido!',
-                            showConfirmButton: false,
-                            timer: 2000
-                        });
-                        location.reload();
-                        // Aquí puedes redirigir al usuario o hacer lo que necesites después del inicio de sesión
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: data.error,
-                        });
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            }
+
+                .catch((error) => console.error("Error:", error));
+            },
+          });
         });
-    });
-    function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-          const cookie = cookies[i].trim();
-          if (cookie.substring(0, name.length + 1) === (name + '=')) {
-            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-            break;
+      document
+        .getElementById("loginButton")
+        .addEventListener("click", function () {
+          Swal.fire({
+            title: "Inicio de Sesión",
+            confirmButtonColor: "#FFB30E",
+            cancelButtonColor: "#F17228",
+            html:
+              '<input id="swal-username" class="swal2-input" placeholder="Usuario o Correo Electrónico">' +
+              '<input id="swal-password" class="swal2-input" placeholder="Contraseña" type="password">',
+            showCancelButton: true,
+            confirmButtonText: "Iniciar Sesión",
+            preConfirm: () => {
+              const username =
+                Swal.getPopup().querySelector("#swal-username").value;
+              const password =
+                Swal.getPopup().querySelector("#swal-password").value;
+
+              const data = {
+                username: username,
+                password: password,
+              };
+
+              fetch("persona/login/", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": getCookie("csrftoken"),
+                },
+                body: JSON.stringify(data),
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.success) {
+                    Swal.fire({
+                      icon: "success",
+                      title: "Inicio de Sesión Exitoso",
+                      text: "¡Bienvenido!",
+                      showConfirmButton: false,
+                      timer: 2000,
+                    });
+                    location.reload();
+                    // Aquí puedes redirigir al usuario o hacer lo que necesites después del inicio de sesión
+                  } else {
+                    Swal.fire({
+                      icon: "error",
+                      title: "Error",
+                      text: data.error,
+                    });
+                  }
+                })
+                .catch((error) => console.error("Error:", error));
+            },
+          });
+        });
+    </script>
+    {% endif %}
+    <script>
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
           }
         }
+        return cookieValue;
       }
-      return cookieValue;
-    }
 
-
-
-
-    document.getElementById('menuButton').addEventListener('click', function() {
-      Swal.fire({
-          title: 'Menú',
-          showCancelButton: false,
-          showConfirmButton: false,
-          html: `
+      document
+        .getElementById("menuButton")
+        .addEventListener("click", function () {
+          Swal.fire({
+            title: "Menú",
+            showCancelButton: false,
+            showConfirmButton: false,
+            html: `
               <button class="btn btn-warning btn-block mb-2" onclick="verAdopciones()">Ver Adopciones</button>
               <button class="btn btn-warning btn-block mb-2" onclick="verDatos({{user.id}})">Ver Mis Datos</button>
-              <a class="btn btn-warning btn-block"  href="{% url 'logout_view' %}">Cerrar Sesión</a>
-          `
-      });
-  });
-  
-  function verAdopciones() {
-      // Aquí puedes poner la lógica para ver las adopciones
-  }
-  
-  function verDatos(personaId) {
-    fetch(`/persona/get-datos/${personaId}/`)
-        .then(response => response.json())
-        .then(data => {
+          `,
+          });
+        });
+
+      function verAdopciones() {
+        // Aquí puedes poner la lógica para ver las adopciones
+      }
+
+      function verDatos(personaId) {
+        fetch(`/persona/obtener-datos/${personaId}/`)
+          .then((response) => response.json())
+          .then((data) => {
             if (data.success) {
-                const datos = data.datos;
-                Swal.fire({
-                    icon: 'info',
-                    title: 'Tus Datos',
-                    html: `
+              const datos = data.datos;
+              Swal.fire({
+                title: "Mi informacion",
+                html: `
                         <p>Nombre: ${datos.nombre}</p>
                         <p>Teléfono: ${datos.telefono}</p>
                         <p>DNI: ${datos.dni}</p>
                         <p>Email: ${datos.email}</p>
                         <p>Fecha de Nacimiento: ${datos.fecha_nacimiento}</p>
                     `,
-                });
+                showCloseButton: true, // Agrega un botón para cerrar
+                showCancelButton: true, // Agrega un botón para editar
+                focusConfirm: false, // Evita el foco automático en el botón de confirmación
+                confirmButtonText: "Editar",
+                confirmButtonColor: "#FFB30E",
+                cancelButtonText: "Cerrar",
+                cancelButtonColor: "#F17228",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  editarPersona(data);
+                }
+              });
             } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: data.error,
-                });
+              Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: data.error,
+              });
             }
-        })
-        .catch(error => console.error('Error:', error));
-}
-      </script>
-</body></html>
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+
+      function editarPersona(data) {
+        Swal.fire({
+          title: "Editar Información",
+          html: `
+                <!-- Agrega los campos de edición aquí (por ejemplo, inputs) -->
+                <input id="swal-input1" class="swal2-input" placeholder="Nuevo Nombre" value="${data.datos.nombre}">
+                <input id="swal-input2" class="swal2-input" placeholder="Nuevo Teléfono" value="${data.datos.telefono}">
+                <input id="swal-input3" class="swal2-input" placeholder="Nuevo DNI" value="${data.datos.dni}">
+                <input id="swal-input4" class="swal2-input" placeholder="Nuevo Email" value="${data.datos.email}">
+                <input id="swal-input5" class="swal2-input swal2-date" type="date" placeholder="Nueva Fecha de Nacimiento" value="${data.datos.fecha_nacimiento}">
+            `,
+          showCancelButton: true,
+          confirmButtonText: "Guardar",
+          confirmButtonColor: "#FFB30E",
+          cancelButtonText: "Cancelar",
+          cancelButtonColor: "#F17228",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            const nuevoNombre =
+              Swal.getPopup().querySelector("#swal-input1").value;
+            const nuevoTelefono =
+              Swal.getPopup().querySelector("#swal-input2").value;
+            const nuevoDNI =
+              Swal.getPopup().querySelector("#swal-input3").value;
+            const nuevoEmail =
+              Swal.getPopup().querySelector("#swal-input4").value;
+            const nuevaFechaNacimiento =
+              Swal.getPopup().querySelector("#swal-input5").value;
+
+            // Realizar solicitud fetch para guardar los cambios
+            fetch(`/persona/editar/${data.datos.id}/`, {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+              },
+              body: JSON.stringify({
+                nombre: nuevoNombre,
+                telefono: nuevoTelefono,
+                dni: nuevoDNI,
+                email: nuevoEmail,
+                fecha_nacimiento: nuevaFechaNacimiento,
+              }),
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  Swal.fire({
+                    icon: "success",
+                    title: "Cambios guardados",
+                    text: "¡Los cambios se han guardado exitosamente!",
+                    showConfirmButton: false,
+                    timer: 2000,
+                  });
+                } else {
+                  Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: data.error,
+                  });
+                }
+              })
+              .catch((error) => console.error("Error:", error));
+          }
+        });
+      }
+    </script>
+  </body>
+</html>

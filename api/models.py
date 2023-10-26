@@ -132,7 +132,7 @@ class Adopcion(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
     usuario_adoptante = models.ForeignKey(Persona, on_delete=models.CASCADE, related_name='adopciones_realizadas')
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)
-    fecha_adopcion = models.DateField()
+    fecha_adopcion = models.DateField(null=True, blank=True)
     estado_adopcion = models.ForeignKey(EstadoAdopcion, on_delete=models.CASCADE)
     comentarios = models.TextField()
 

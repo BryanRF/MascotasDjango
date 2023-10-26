@@ -2,52 +2,7 @@
 {% load static %}
 {% block content %}
 
-{% comment %} <section class="py-5 overflow-hidden bg-primary" id="home">
-  <div class="container">
-    <div class="row flex-center">
-      <div class="col-md-5 col-lg-6 order-0 order-md-1 mt-8 mt-md-0"><a class="img-landing-banner" href="#!">
-        
- 
-          
-            <img id="evento-imagen-{{ forloop.counter }}" style="border-radius: 20%" class="img-fluid " src="{% static 'assets/img/eventos/1.png' %}" alt="..." />
-          </a></div>
-      <div class="col-md-7 col-lg-6 py-8 text-md-start text-center">
-        <h1 class="display-1 fs-md-5 fs-lg-6 fs-xl-8 text-light">{{ evento.nombre }} {{ evento.fecha_inicio }}</h1>
-        <h1 class="text-800 mb-5 fs-4">Puedes participar hasta el <br class="d-none d-xxl-block" />
-           {{ evento.fecha_fin_participacion }}</h1>
-        <div class="card w-xxl-75">
-          <div class="card-body">
-            <nav>
-              <div class="nav nav-tabs" id="nav-tab" role="tablist">
-          
-                <button class="nav-link mb-3 active" id="nav-profile-tab" data-bs-toggle="tab"
-                  data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
-                  aria-selected="false"><i class="bi bi-cash me-2"></i>Separar tu ticket para {{ user.username }}</button>
-              </div>
-            </nav>
-            <div class="tab-content mt-3" id="nav-tabContent">
-             
-              <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-                <form class="row gx-4 gy-2 align-items-center">
-                  <div class="col">
-                    <div class="input-group-icon"><i class="fas fa-user text-danger input-box-icon"></i>
-                      <label class="visually-hidden" for="inputPickup">Cantidad</label>
-                      <input class="form-control input-box form-foodwagon-control" min="1" value="1" id="inputPickup" type="number"
-                        placeholder="Cantidad" />
-                    </div>
-                  </div>
-                  <div class="d-grid gap-3 col-sm-auto">
-                    <button class="btn btn-danger" id="ParticiparEvento" data-precio="{{evento.costo_participacion}}" type="button">Participar</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section> {% endcomment %}
+
 
 <script>
     const btnParticipar = document.getElementById('ParticiparEvento');
@@ -114,7 +69,7 @@
           <div class="container">
             <div class="row">
                 <div class="col-lg-6 text-center mx-auto mb-3 mb-md-5 mt-4">
-                    <h5 class="fw-bold text-danger fs-3 fs-lg-5 lh-sm ">Formulario de adopcion</h5>
+                    <h5 class="fw-bold text-danger fs-3 fs-lg-5 lh-sm ">Formulario de adopcion general</h5>
                   </div>
               <div class="col-12">
                 <div class="card card-span mb-3 shadow-lg">
@@ -124,12 +79,11 @@
                         <img class="img-fluid w-100 fit-cover h-100 rounded-top rounded-md-end rounded-md-top-0" src="{% static 'assets/img/gallery/pexels-helena-lopes-1938123.jpg' %}" alt="..." />
                       </div>
                       <div class="col-md-7 col-xl-5 col-xxl-4 p-4 p-lg-5">
-                        <form method="post">
+                        <form id="formAdopcion" method="post">
                             {% csrf_token %}
                             <div class="mb-3">
-                              <label for="usuario_adoptante" class="form-label">Usuario Adoptante</label>
-                              <input id="usuario_adoptante" type="text" class="form-control" value="{{user.username}}"/>
-                         
+                              <input type="hidden" name="id_usuario" value="{{ user.id }}">
+                              
                             </div>
                             <div class="mb-3">
                               <label for="mascota" class="form-label">Selecciona la huellita</label>
@@ -148,7 +102,7 @@
                               <label for="comentarios" class="form-label">Por que quieres adoptar?</label>
                               <textarea class="form-control" id="comentarios" name="comentarios" rows="3"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Enviar</button>
+                            <button type="button" id="enviarSolicitudAdopcion" class="btn btn-primary">Enviar</button>
                           </form>
                           
                       </div>
@@ -201,7 +155,57 @@
             </div><!-- end of .container-->
           
           </section>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const formAdopcion = document.getElementById('formAdopcion');
+    const enviarSolicitudAdopcion = document.getElementById('enviarSolicitudAdopcion');
 
+    enviarSolicitudAdopcion.addEventListener('click', function() {
+        const id_usuario = formAdopcion.querySelector('input[name="id_usuario"]').value;
+        const mascota = formAdopcion.querySelector('select[name="mascota"]').value;
+        const comentarios = formAdopcion.querySelector('textarea[name="comentarios"]').value;
+
+   
+
+        fetch('/mascota/proceso-adopcion/', {
+            method: 'POST',
+            body: JSON.stringify({
+              id_usuario: id_usuario,
+              mascota: mascota,
+              comentarios: comentarios,
+        }),
+            headers: {
+              'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Verificar si la solicitud fue exitosa
+            if (data.message === 'Enviado') {
+              // Mostrar Sweet Alert de éxito
+              Swal.fire({
+                icon: 'success',
+                title: 'Solicitud Enviada',
+                text: 'Su solicitud de adopción ha sido enviada con éxito.'
+              });
+            } else if (data.message === 'Ya tienes una solicitud pendiente para esta mascota') {
+              // Mostrar Sweet Alert de error
+              Swal.fire({
+                icon: 'info',
+                text: 'Ya tienes una solicitud pendiente para esta mascota.'
+              });
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+
+    // Función para obtener el valor de una cookie por nombre
+  
+});
+
+
+</script>
 
 
     <!-- ============================================-->

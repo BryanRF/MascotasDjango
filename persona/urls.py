@@ -8,12 +8,15 @@ urlpatterns = [
     # ... otras rutas ...
     path('create/', views.persona_create, name='persona_create'),
     path('list/', views.persona_list, name='persona_list'),
-    path('direccion/create/<str:persona_id>/', views.direccion_create, name='direccion_create'),
-    path('direccion/list/<str:persona_id>/', views.direccion_list, name='direccion_list'),
+    path('direccion/create/<str:persona_id>/',
+         views.direccion_create, name='direccion_create'),
+    path('direccion/list/<str:persona_id>/',
+         views.direccion_list, name='direccion_list'),
     path('registro/', views.usuario_registro, name='usuario_registro'),
     path('login/', views.usuario_login, name='usuario_login'),
     path('logout/', views.logout_view, name='logout_view'),
-    path('/get-datos/<uuid:usuario_id>/', views.get_datos, name='get_datos'),
-    
+    path('obtener-datos/<int:usuario_id>/', views.get_datos, name='get_datos'),
+    path('editar/<uuid:persona_id>/', views.editar_persona, name='editar_persona'),
+
     # ... otras rutas ...
 ]
