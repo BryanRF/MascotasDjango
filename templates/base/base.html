@@ -1,305 +1,90 @@
-{% load static %}
-
+{% load staticfiles %}
 <!DOCTYPE html>
-<html>
-  <head>
-    <!-- Basic -->
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <!-- Mobile Metas -->
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <!-- Site Metas -->
-    <meta name="keywords" content="" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+<html lang="es">
 
-    <link
-      rel="shortcut icon"
-      href="{% static 'images/favicon.png' %}"
-      type=""
-    />
+<head>
+    {% block extrastatic %} {% endblock %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <meta charset="UTF-8">
+    <title>{% block title %} Document {% endblock %}</title>
+</head>
 
-    <title>Adopcion Responsable</title>
-    
-    <!-- bootstrap core css -->
+<body>
+    {% block navbar %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <a class="navbar-brand" href="#">Home</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <!--owl slider stylesheet -->
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+        <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav mr-auto">
 
-    <!-- nice select  -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css"
-      integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ=="
-      crossorigin="anonymous"
-    />
-    <!-- font awesome style -->
-
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'css/bootstrap.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'css/font-awesome.min.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'css/bootstrap.css' %}"
-    />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="{% static 'css/style.css' %}"
-    />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.datatables.net/v/bs4-4.6.0/jq-3.7.0/dt-1.13.6/af-2.6.0/b-2.4.2/b-colvis-2.4.2/b-html5-2.4.2/b-print-2.4.2/fc-4.3.0/fh-3.4.0/kt-2.10.0/r-2.5.0/rg-1.4.1/rr-1.4.1/sl-1.7.0/sr-1.3.0/datatables.min.css" rel="stylesheet">
- 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/v/bs4-4.6.0/jq-3.7.0/dt-1.13.6/af-2.6.0/b-2.4.2/b-colvis-2.4.2/b-html5-2.4.2/b-print-2.4.2/fc-4.3.0/fh-3.4.0/kt-2.10.0/r-2.5.0/rg-1.4.1/rr-1.4.1/sl-1.7.0/sr-1.3.0/datatables.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
-  </head>
-
-  <body>
-    <div class="hero_area">
-      <div class="bg-box">
-        <img
-          src="{% static 'images/pexels-nothing-ahead-16278274.jpg' %}"
-          alt=""
-        />
-      </div>
-      <!-- header section strats -->
-      <header class="header_section ">
-        <div class="container">
-          <nav class="navbar navbar-expand-lg custom_nav-container">
-            <a class="navbar-brand" href="{% url 'inicio' %}">
-              <span class="bg-white rounded-pill p-3"> Adopcion Responsable🐾 </span>
-            </a>
-
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-toggle="collapse"
-              data-target="#navbarSupportedContent"
-              aria-controls="navbarSupportedContent"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span class=""> </span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-              <ul class="navbar-nav mx-auto">
-                <li class="nav-item active">
-                  <a class="nav-link" href="{% url 'inicio' %}"
-                    >INICIO <span class="sr-only">(current)</span></a
-                  >
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Mascotas
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="themes">
+                        <a class="dropdown-item" href="{% url 'mascota_crear' %}">Registrar</a>
+                        <a class="dropdown-item" href="{% url 'mascota_listar2' %}">Listar</a>
+                    </div>
                 </li>
+
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Adopciones
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="download">
+                        <a class="dropdown-item" href="{% url 'solicitud_crear' %}">Solicitar</a>
+                        <a class="dropdown-item" href="{% url 'solicitud_listar' %}">Listar solicitudes</a>
+                    </div>
+                </li>
+
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Otros
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="download">
+                        <a class="dropdown-item" href="{% url 'usuario_registrar' %}">Registrar usuario</a>
+                        <a class="dropdown-item" href="{% url 'usuario_listado' %}" target="_blank">Listado de usuarios</a>
+                        <a class="dropdown-item" href="{% url 'api' %}" target="_blank">UserAPI</a>
+                        <a class="dropdown-item" href="{% url 'listado' %}" target="_blank">Listado de mascotas</a>
+                    </div>
+                </li>
+
+            </ul>
+            <ul class="nav navbar-nav ml-auto">
                 <li class="nav-item">
-                  <a class="nav-link" href="{% url 'mascotas' %}">MASCOTAS</a>
+                    <a class="nav-link" href="#" target="_blank">Marcela</a>
                 </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="about.html">NOSOTROS</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" id="download">Opciones
+                        <span class="caret"></span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="download">
+                        <a class="dropdown-item" href="{% url 'logout' %}">Salir</a>
+                    </div>
                 </li>
-              </ul>
-           
-          
-              <div class="btn-group" role="group" aria-label="Basic example">
-                {% if user.is_authenticated %}
-                    <a href="#" id="registerButton" class="btn btn-warning order_online">Mis datos</a>
-                    <a href="{% url 'logout_view' %}" class="btn btn-warning order_online">Cerrar Sesión</a>
-                {% else %}
-                    <a href="#" id="registerButton" class="btn btn-warning order_online">Registrate</a>
-                    <a href="#" id="loginButton" class="btn btn-warning order_online">Ingresar</a>
-                {% endif %}
-            </div>
-            
-            </div>
-          </nav>
+            </ul>
         </div>
-      </header>
+    </nav>
+    {% endblock %}
 
-      {% block content %}
-      <h4> Bloque de contenido </h4>
-      {% endblock %} 
-    
-    <!-- footer section -->
-    <footer class="footer_section">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-4 footer-col">
-            <div class="footer_contact">
-              <h4>Contactanos</h4>
-              <div class="contact_link_box">
-                <a href="">
-                  <i class="fa fa-map-marker" aria-hidden="true"></i>
-                  <span> Ubicacion </span>
-                </a>
-                <a href="">
-                  <i class="fa fa-phone" aria-hidden="true"></i>
-                  <span> Call +01 1234567890 </span>
-                </a>
-                <a href="">
-                  <i class="fa fa-envelope" aria-hidden="true"></i>
-                  <span> demo@gmail.com </span>
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 footer-col">
-            <div class="footer_detail">
-              <a href="" class="footer-logo"> Adopcion Responsable </a>
-              <p>
-                Necessary, making this the first true generator on the Internet.
-                It uses a dictionary of over 200 Latin words, combined with
-              </p>
-              <div class="footer_social">
-                <a href="">
-                  <i class="fa fa-facebook" aria-hidden="true"></i>
-                </a>
-                <a href="">
-                  <i class="fa fa-twitter" aria-hidden="true"></i>
-                </a>
-                <a href="">
-                  <i class="fa fa-linkedin" aria-hidden="true"></i>
-                </a>
-                <a href="">
-                  <i class="fa fa-instagram" aria-hidden="true"></i>
-                </a>
-                <a href="">
-                  <i class="fa fa-pinterest" aria-hidden="true"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 footer-col">
-            <h4>Hora de atencion</h4>
-            <p>Todos los dias</p>
-            <p>10.00 Am -10.00 Pm</p>
-          </div>
-        </div>
-        <div class="footer-info">
-          <p>
-            &copy; <span id="displayYear"></span>
-            <a href="https://html.design/"></a><br /><br />
-            <span id="displayYear"></span>
-            <a href="https://themewagon.com/" target="_blank"></a>
-          </p>
-        </div>
-      </div>
-    </footer>
-    <!-- footer section -->
+    <div class="container">
+        {% block content %}
+        <h4> Bloque de contenido </h4>
+        {% endblock %} {% block footer %} {% endblock%}
+    </div>
 
-    <!-- jQery -->
-    <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
-    <!-- popper js -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-      crossorigin="anonymous"
-    ></script>
-    <!-- bootstrap js -->
-
-    <script src="{% static 'js/bootstrap.js' %}"></script>
-    <!-- owl slider -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
-    <!-- isotope js -->
-    <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
-    <!-- nice select -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
-    <!-- custom js -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
     <script src="{% static 'js/custom.js' %}"></script>
-    <!-- Google Map -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap"></script>
-    <!-- End Google Map -->
-    <script>
-      document.querySelectorAll('.copy-code-button').forEach(button => {
-          button.addEventListener('click', () => {
-              const code = button.dataset.code;
-              const tempInput = document.createElement('input');
-              tempInput.value = code;
-              document.body.appendChild(tempInput);
-              tempInput.select();
-              document.execCommand('copy');
-              document.body.removeChild(tempInput);
-  
-              Swal.fire({
-                  icon: 'success',
-                  title: '¡Código copiado!',
-                  text: 'El código se ha copiado al portapapeles correctamente.',
-                  showConfirmButton: false,
-                  timer: 1500
-              });
-          });
-      });
-  </script>
-    <script>
-      function likeMascota(mascotaId) {
-        fetch(`api/like_mascota/${mascotaId}/`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            body: JSON.stringify({ mascota_id: mascotaId })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.message) {
-                // Actualizar la interfaz de usuario si es necesario
-                document.getElementById(`like-${mascotaId}`).textContent = data.likes;
-                // Mostrar la notificación de éxito
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Like Agregado',
-                  text: '¡Has dado like a esta mascota!, dale los me gusta que quieras :D',
-                  showConfirmButton: false,
-                  timer: 3000,
-                  iconHtml: '<i class="bi bi-suit-heart-fill"></i>' // Reemplaza con el código de tu corazón
-              });
-              
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    }
-    
-    
-    
-      function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-          const cookies = document.cookie.split(';');
-          for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-              break;
-            }
-          }
-        }
-        return cookieValue;
-      }
-      
-      
-    </script>
-    
 
-    <!-- y así sucesivamente para otros campos -->
+    {% block extrajs %} {% endblock %}
+</body>
 
-
-      
-      
-  </body>
 </html>

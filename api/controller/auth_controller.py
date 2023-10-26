@@ -3,8 +3,8 @@ from django.contrib.auth.hashers import check_password
 from django.db import connection
 
 # from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.views import TokenObtainPairView
+# from rest_framework_simplejwt.tokens import RefreshToken
+# from rest_framework_simplejwt.views import TokenObtainPairView
 from encriptation import Encriptation
 from response import Response
 

@@ -10,7 +10,7 @@ from django.contrib.auth import logout
 from django.shortcuts import redirect
 from django.urls import reverse
 from .serializers import PersonaSerializer,MascotaSerializer
-from django_filters.rest_framework import DjangoFilterBackend
+# from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 @method_decorator(csrf_exempt, name='dispatch')
 class MascotaView(View):
@@ -35,7 +35,6 @@ class PersonaView(View):
             dni = data.get('dni').strip()
             email = data.get('email').strip()
             fecha_nacimiento = data.get('fechaNacimiento').strip()
-            genero = data.get('genero').strip()
             # ajustar parametros 
             nombre = ' '.join(part.capitalize() for part in nombre.split())
             email = email.lower()
@@ -145,5 +144,5 @@ class MascotasDataTablesView(View):
 class MascotaAPIView(generics.ListAPIView):
     serializer_class = MascotaSerializer
     queryset = Mascota.objects.all()
-    filter_backends = [DjangoFilterBackend]
+    # filter_backends = [DjangoFilterBackend]
     filterset_fields = ['especie__nombre', 'codigo']

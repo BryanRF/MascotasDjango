@@ -17,10 +17,10 @@
   <!-- ===============================================-->
   <!--    Favicons-->
   <!-- ===============================================-->
-  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'assets/img/favicons/apple-touch-icon.png' %}">
-  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'assets/img/favicons/favicon-32x32.png' %}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'assets/img/favicons/favicon-16x16.png' %}">
-  <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/img/favicons/favicon.ico' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icon/icon1.png' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icon/icon1.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icon/icon1.ico' %}">
+  <link rel="shortcut icon" type="image/x-icon" href="{% static 'icon/icon1.ico' %}">
   <link rel="manifest" href="{% static 'assets/img/favicons/manifest.json' %}">
   <meta name="msapplication-TileImage" content="{% static 'assets/img/favicons/mstile-150x150.png' %}">
   <meta name="theme-color" content="#ffffff">
@@ -61,6 +61,7 @@
     max-height: 50px; /* Ajusta el valor según tus necesidades */
     overflow: hidden;
 }
+
 </style>
 
 <body>
@@ -70,8 +71,8 @@
   <!-- ===============================================-->
   <main class="main" id="top">
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" data-navbar-on-scroll="data-navbar-on-scroll">
-      <div class="container"><a class="navbar-brand d-inline-flex" href="index.html"><img class="d-inline-block"
-            src="{% static 'assets/img/gallery/logo.svg' %}" alt="logo" /><span
+      <div class="container"><a class="navbar-brand d-inline-flex" href="{% url 'inicio'  %}"><img class="d-inline-block"
+            src="{% static 'icon/icon1.svg' %}" alt="logo" /><span
             class="text-1000 fs-3 fw-bold ms-2 text-gradient">Huellitas Sipanenses</span></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span
@@ -86,8 +87,8 @@
            
             {% if user.is_authenticated %}
                     <a href="#"  class="btn btn-white shadow-warning text-warning">{{ user.username }}</a>
-                    <button id="registerButton" class="btn btn-white shadow-warning text-warning" type="button"> <i
-                      class="fas fa-user me-2" href="{% url 'logout_view' %}" ></i>Cerrar Sesión</button>
+                    <a  class="btn btn-white shadow-warning text-warning" href="{% url 'logout_view' %}"> <i
+                      class="fas fa-user me-2"  ></i>Cerrar Sesión</a>
                 {% else %}
                     
                     <button id="registerButton" class="btn btn-white shadow-warning text-warning" type="button"> <i
@@ -134,22 +135,71 @@
   <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&amp;display=swap"
     rel="stylesheet">
     <script>
+      function likeMascota(mascotaId) {
+        fetch(`mascota/mascota_like/${mascotaId}/`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ mascota_id: mascotaId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.message) {
+                // Actualizar la interfaz de usuario si es necesario
+                var elementos = document.getElementsByClassName(`like-${mascotaId}`);
+                  for (var i = 0; i < elementos.length; i++) {
+                      elementos[i].textContent = data.likes;
+                  }
+
+                // Mostrar la notificación de éxito
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Like Agregado',
+                  text: '¡Has dado like a esta mascota!, dale los me gusta que quieras :D',
+                  showConfirmButton: false,
+                  timer: 3000,
+                  iconHtml: '<i class="bi bi-suit-heart-fill"></i>' // Reemplaza con el código de tu corazón
+              });
+              
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+      document.querySelectorAll('.copy-code-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const code = button.dataset.code;
+            const tempInput = document.createElement('input');
+            tempInput.value = code;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            Swal.fire({
+                icon: 'success',
+                title: '¡Código copiado!',
+                text: 'El código se ha copiado al portapapeles correctamente.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        });
+    });
       document.getElementById('registerButton').addEventListener('click', function() {
         Swal.fire({
           title: 'Registro de Usuario ',
+          confirmButtonColor: '#FFB30E',
+          cancelButtonColor: '#F17228',
           html:
-          '<input id="swal-input1" class="swal2-input"  placeholder="Usuario" required>' +
-          '<input id="swal-input2" class="swal2-input"  placeholder="Contraseña" type="password" required>' +
+          '<input id="swal-input1" class="swal2-input "  placeholder="Usuario" required>' +
+          '<input id="swal-input2" class="swal2-input "  placeholder="Contraseña" type="password" required>' +
           '<input id="swal-input3" class="swal2-input"  placeholder="Nombre Completo" required>' +
           '<input id="swal-input4" class="swal2-input"  placeholder="Teléfono" required>' +
           '<input id="swal-input5" class="swal2-input" placeholder="DNI" required>' +
           '<input id="swal-input6" class="swal2-input" placeholder="Email" required>' +
-          '<input id="swal-input7" class="swal2-input"  type="date" required>' +
-          '<select id="swal-input8" class="swal2-input" required>' +
-            '<option value="masculino" >Masculino</option>' +
-            '<option value="femenino">Femenino</option>' +
-            '<option value="otro">Otro</option>' +
-          '</select>',
+          '<input id="swal-input7" class="swal2-input swal2-date"  type="date" required>' ,
+
           showCancelButton: true,
           clickOutsideToClose: false, // Evita que se cierre al hacer clic fuera
           confirmButtonText: 'Registrar',
@@ -161,7 +211,6 @@
             const dni = Swal.getPopup().querySelector('#swal-input5').value;
             const email = Swal.getPopup().querySelector('#swal-input6').value;
             const fechaNacimiento = Swal.getPopup().querySelector('#swal-input7').value;
-            const genero = Swal.getPopup().querySelector('#swal-input8').value;
         
             // Construye los datos que enviarás al servidor
             const data = {
@@ -172,7 +221,6 @@
                 dni: dni,
                 email: email,
                 fechaNacimiento: fechaNacimiento,
-                genero: genero
             };
             console.log(data)
             // Realiza la solicitud fetch
@@ -212,21 +260,23 @@
       document.getElementById('loginButton').addEventListener('click', function() {
         Swal.fire({
             title: 'Inicio de Sesión',
+            confirmButtonColor: '#FFB30E',
+          cancelButtonColor: '#F17228',
             html:
             '<input id="swal-username" class="swal2-input" placeholder="Usuario o Correo Electrónico">' +
             '<input id="swal-password" class="swal2-input" placeholder="Contraseña" type="password">',
             showCancelButton: true,
             confirmButtonText: 'Iniciar Sesión',
             preConfirm: () => {
-                const username_or_email = Swal.getPopup().querySelector('#swal-username').value;
+                const username = Swal.getPopup().querySelector('#swal-username').value;
                 const password = Swal.getPopup().querySelector('#swal-password').value;
     
                 const data = {
-                    username_or_email: username_or_email,
+                    username: username,
                     password: password
                 };
     
-                fetch('api/login/', {
+                fetch('persona/login/', {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
@@ -258,6 +308,19 @@
             }
         });
     });
-    
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
       </script>
 </body></html>

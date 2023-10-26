@@ -2,7 +2,8 @@ from ..controller import Controller
 from ..response import Response
 from ...models import Persona
 import json
-from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate, login
+# from rest_framework_simplejwt.tokens import RefreshToken
 
 class PersonasController(Controller):
     def __init__(self, *args, **kwargs):
@@ -11,24 +12,23 @@ class PersonasController(Controller):
 
     def login_usuario(self, request):
         try:
-            usuario = request.data.get('username')
-            password = request.data.get('password')
+            data = json.loads(request.body)
+            username_or_email = data.get('username_or_email')
+            password = data.get('password')
 
-            # Verifica las credenciales del usuario
-            user = self.persona.objects.get(username=usuario)
+            # Verifica si el campo ingresado es un nombre de usuario o un correo electrónico
+            user = None
+            if '@' in username_or_email:
+                user = authenticate(request, email=username_or_email, password=password)
+            else:
+                user = authenticate(request, username=username_or_email, password=password)
 
-            if user.check_password(password):
-                refresh = RefreshToken.for_user(user)
-
-                return Response(
-                    code=200,
-                    message='Usuario autenticado',
-                    data={
-                        'user_id': user.id,
-                        'access_token': str(refresh.access_token),
-                        'refresh_token': str(refresh)
-                    }
-                )
+            if user is not None:
+                login(request, user)
+                # Verifica las credenciales del usuario
+                refresh= None
+                return Response(code=200, title='Success', message='Usuario autenticado')
+                
             else:
                 return Response(code=401, title='Error', message='Credenciales incorrectas')
         except self.persona.DoesNotExist:
@@ -37,17 +37,17 @@ class PersonasController(Controller):
             return Response(code=400, title='Error', message=str(e))
 
 
-    def opciones_list(self, request):
-        try:
-            id_usuario = str(request.user)
-            id_database = request.GET.get('idDatabase')
-            id_empresa = request.GET.get('idEmpresa')
-            estado = request.GET.get('estado')
-            data = self.cursor.select(
-                'exec WebGetListOpcionesCmb %s,%s,%s,%s', (estado, id_usuario, id_database, id_empresa))
+    # def opciones_list(self, request):
+    #     try:
+    #         id_usuario = str(request.user)
+    #         id_database = request.GET.get('idDatabase')
+    #         id_empresa = request.GET.get('idEmpresa')
+    #         estado = request.GET.get('estado')
+    #         data = self.cursor.select(
+    #             'exec WebGetListOpcionesCmb %s,%s,%s,%s', (estado, id_usuario, id_database, id_empresa))
 
-            return Response(code=200, message='Succesfull', data=data)
-        except Exception as e:
-            return Response(code=400, title='Error', message=str(e))
+    #         return Response(code=200, message='Succesfull', data=data)
+    #     except Exception as e:
+    #         return Response(code=400, title='Error', message=str(e))
 
    

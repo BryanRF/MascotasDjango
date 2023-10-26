@@ -4,7 +4,7 @@ from .models import Persona, Mascota, Imagen, Comentario, Etiqueta, Especie
 class PersonaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Persona
-        fields = ['id', 'nombre', 'telefono', 'dni', 'email', 'fecha_nacimiento', 'genero', 'user']
+        fields = ['id', 'nombre', 'telefono', 'dni', 'email', 'fecha_nacimiento', 'user']
 
 
 class ComentarioSerializer(serializers.ModelSerializer):

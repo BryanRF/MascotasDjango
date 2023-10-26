@@ -1,4 +1,4 @@
-from rest_framework_simplejwt.authentication import JWTAuthentication
+# from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from rest_framework.status import HTTP_401_UNAUTHORIZED
@@ -9,10 +9,11 @@ class JWTMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        auth = JWTAuthentication()
+        # auth = JWTAuthentication()
 
         try:
-            user = auth.authenticate(request)
+            user = None
+            # user = auth.authenticate(request)
             # return user
             if user is not None:
                 request.user = 'user'  # user[0] contains the user object
