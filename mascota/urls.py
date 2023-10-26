@@ -4,7 +4,7 @@ from . import views
 # from mascota.views import index, mascota_view, mascota_list, mascota_edit, mascota_delete, mascota_like
 
 urlpatterns = [
-    # path('mascotas', (views.index), name='mascota'),
+    path('adopcion/', (views.index), name='adopcion'),
     # path('mascota_view/', views.mascota_view, name='mascota_view'),
     # path('mascota_list/', views.mascota_list, name='mascota_list'),
     # path('mascota_edit/<uuid:id_mascota>/', views.mascota_edit, name='mascota_edit'),

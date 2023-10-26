@@ -13,5 +13,7 @@ urlpatterns = [
     path('registro/', views.usuario_registro, name='usuario_registro'),
     path('login/', views.usuario_login, name='usuario_login'),
     path('logout/', views.logout_view, name='logout_view'),
+    path('/get-datos/<uuid:usuario_id>/', views.get_datos, name='get_datos'),
+    
     # ... otras rutas ...
 ]

@@ -9,4 +9,4 @@ class MascotaForm(forms.ModelForm):
 class AdopcionForm(forms.ModelForm):
     class Meta:
         model = Adopcion
-        fields = ['usuario_adoptante', 'mascota', 'fecha_adopcion', 'estado_adopcion', 'comentarios']
+        fields = ['usuario_adoptante', 'mascota', 'fecha_adopcion', 'estado_adopcion', ]

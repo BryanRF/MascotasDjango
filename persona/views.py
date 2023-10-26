@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 import json
 from django.shortcuts import render, redirect
 from .forms import PersonaForm, DireccionForm,UsuarioRegistroForm,UsuarioLoginForm
@@ -5,6 +6,8 @@ from api.models import Persona, Direccion
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
+from django.contrib.auth import logout
+
 def persona_create(request):
     if request.method == 'POST':
         form = PersonaForm(request.POST)
@@ -111,9 +114,28 @@ def usuario_login(request):
         else:
             return JsonResponse({'success': False, 'error': 'Credenciales inválidas'})
         
-from django.contrib.auth import logout
 
 def logout_view(request):
     logout(request)
     # Redirige a donde quieras después del cierre de sesión
     return redirect('inicio')
+
+
+def get_datos(request, usuario_id):
+    try:
+        usuario = User.objects.get(id=usuario_id)
+        persona = Persona.objects.get(user=usuario)
+
+        datos = {
+            'nombre': persona.nombre,
+            'telefono': persona.telefono,
+            'dni': persona.dni,
+            'email': persona.email,
+            'fecha_nacimiento': str(persona.fecha_nacimiento),
+        }
+
+        return JsonResponse({'success': True, 'datos': datos})
+    except User.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'El usuario no existe'})
+    except Persona.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'La persona no existe'})

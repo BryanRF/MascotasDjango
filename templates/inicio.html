@@ -35,7 +35,7 @@
                     </div>
                   </div>
                   <div class="d-grid gap-3 col-sm-auto">
-                    <button class="btn btn-danger" type="submit">Continuar</button>
+                    <a class="btn btn-danger" href="{% url 'adopcion' %}">Continuar</a>
                   </div>
                 </form>
               </div>
@@ -133,7 +133,6 @@
                   <a class="stretched-link" href="{% url 'ver_evento' evento.id %}"></a>
                 </div>
               </div>
-              
             {% endfor %}
             <script> document.addEventListener('DOMContentLoaded', function() {
               {% for evento in eventos %}
@@ -141,8 +140,7 @@
                 var img = document.getElementById('evento-imagen-{{ forloop.counter }}');
                 img.src = '{% static "assets/img/eventos/" %}' + num + '.png';
               {% endfor %}
-            });
-          </script>
+            });</script>
               
             </div>
           </div>

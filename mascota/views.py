@@ -12,21 +12,24 @@ def listado(request):
 
 
 def index(request):
-    if request.user.is_authenticated:
-        adopciones_realizadas = Adopcion.objects.filter(persona__usuario=request.user)
-        contexto = {'adopciones_realizadas': adopciones_realizadas}
-        return render(request, 'mascotas.html', contexto)
-    else:
-        especies_con_mascotas = Especie.objects.filter(mascota__isnull=False).distinct()
-        eventos = Evento.objects.filter(fecha_inicio__gte=date.today())
-        mascotas_populares = Mascota.objects.order_by('-likes')[:4]
+    # if request.user.is_authenticated:
+    #     adopciones_realizadas = Adopcion.objects.filter(persona__usuario=request.user)
+    #     contexto = {'adopciones_realizadas': adopciones_realizadas}
+    #     return render(request, 'mascotas.html', contexto)
+    # else:
+    #     especies_con_mascotas = Especie.objects.filter(mascota__isnull=False).distinct()
+    #     eventos = Evento.objects.filter(fecha_inicio__gte=date.today())
+    #     mascotas_populares = Mascota.objects.order_by('-likes')[:4]
 
-        contexto.update({
-            'especies': especies_con_mascotas,
-            'eventos': eventos,
-            'mascotas_populares': mascotas_populares
-        })
-        return render(request, 'inicio.html')
+    #     contexto.update({
+    #         'especies': especies_con_mascotas,
+    #         'eventos': eventos,
+    #         'mascotas_populares': mascotas_populares
+    #     })
+        # return render(request, 'adopcion.html')
+        mascota = Mascota.objects.all().order_by('id')
+        contexto = {'mascotas':mascota}
+        return render(request,'adopcion.html',contexto)
 
 
 def mascota_view(request):
