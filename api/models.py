@@ -3,7 +3,7 @@ import uuid
 from django.contrib.auth.models import User
 from PIL import Image
 from django.contrib.auth import authenticate, login
-
+from django.db.models import Max
 class Persona(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
     nombre = models.CharField(max_length=100)
@@ -139,6 +139,8 @@ class Adopcion(models.Model):
     def __str__(self):
         return f'Adopción de {self.mascota.nombre} por {self.usuario_adoptante.nombre}'
 
+
+
 class EvaluacionAdopcion(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
     adopcion = models.ForeignKey(Adopcion, on_delete=models.CASCADE)
@@ -196,18 +198,15 @@ class EventoParticipante(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
     evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
     participante = models.ForeignKey(Persona, on_delete=models.CASCADE)
-    ticket = models.PositiveIntegerField(unique=True)  # Campo para el número de ticket único
+    ticket = models.PositiveIntegerField(unique=True, editable=False)  # Campo para el número de ticket único
+
     def save(self, *args, **kwargs):
-        self.evento.recaudacion += self.evento.costo_participacion
-        self.evento.save()
-        super().save(*args, **kwargs)
-    def save(self, *args, **kwargs):
-        # Verificar si es un nuevo registro o una actualización
-        if not self.id:
-            # Es un nuevo registro, asignar número de ticket
-            ultimo_ticket = EventoParticipante.objects.filter(evento=self.evento).order_by('-ticket').first()
-            if ultimo_ticket:
-                self.ticket = ultimo_ticket.ticket + 1
+        if not self.ticket:
+            # Obtener el último ticket registrado
+            ultimo_ticket = EventoParticipante.objects.aggregate(max_ticket=Max('ticket'))['max_ticket']
+            
+            if ultimo_ticket is not None:
+                self.ticket = ultimo_ticket + 1
             else:
                 self.ticket = 1
 

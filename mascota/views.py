@@ -28,47 +28,50 @@ def mascota_view(request):
         form = MascotaForm()
     return render(request,'mascotas.html',{'form':form})
 
-def mascota_list(request):
-    mascota = Mascota.objects.all().order_by('id')
-    contexto = {'mascotas':mascota}
-    return render(request,'mascotas.html',contexto)
+def mascota_usuario_list(request,id_usuario):
+    persona = Persona.objects.get(user__id=id_usuario)
+    adopciones_aprobadas = Adopcion.objects.filter(usuario_adoptante=persona, estado_adopcion__estado='Aprobado')
+    mascotas_aprobadas = [adopcion.mascota for adopcion in adopciones_aprobadas]
+    contexto = {'mascotas_aprobadas': mascotas_aprobadas}
+    return render(request, 'mascotas_aprobadas.html', contexto)
 
-def mascota_view(request):
-    if request.method == 'POST':
-        form = MascotaForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'success': True, 'message': 'Mascota creada exitosamente'})
-        else:
-            return JsonResponse({'success': False, 'errors': form.errors})
-    else:
-        form = MascotaForm()
-        return JsonResponse({'success': False, 'message': 'Método no permitido'})
+from django.http import JsonResponse
+
+def mascota_datatables_list(request, id_usuario):
+    persona = Persona.objects.get(user__id=id_usuario)
+    adopciones_aprobadas = Adopcion.objects.filter(usuario_adoptante=persona, estado_adopcion__estado='Aprobado')
+    mascotas_aprobadas = [adopcion.mascota for adopcion in adopciones_aprobadas]
+
+    data = []
+    for mascota in mascotas_aprobadas:
+        data.append({
+            'codigo': mascota.codigo,
+            'imagen': mascota.imagen_set.first().imagen.url,
+            'nombre': mascota.nombre,
+            'especie': mascota.especie.nombre,
+            'edad': mascota.edad,
+            'descripcion': mascota.descripcion,
+            'disponible': mascota.disponible,
+            'color': mascota.color,
+            'tamano': mascota.tamano,
+            'genero': mascota.genero,
+            'likes': mascota.likes,
+            'id': mascota.id
+        })
+
+    
+    return JsonResponse(data, safe=False)
+
+
+
 
 def mascota_list(request):
     mascotas = Mascota.objects.all().order_by('id').values()
     return JsonResponse({'mascotas': list(mascotas)})
 
-def mascota_edit(request, id_mascota):
-    mascota = Mascota.objects.get(id=id_mascota)
-    if request.method == 'GET':
-        form = MascotaForm(instance=mascota)
-        return JsonResponse({'success': False, 'message': 'Método no permitido'})
-    else:
-        form = MascotaForm(request.POST, instance=mascota)
-        if form.is_valid():
-            form.save()
-            return JsonResponse({'success': True, 'message': 'Mascota actualizada exitosamente'})
-        else:
-            return JsonResponse({'success': False, 'errors': form.errors})
-
-def mascota_delete(request, id_mascota):
-    mascota = Mascota.objects.get(id=id_mascota)
-    if request.method == 'POST':
-        mascota.delete()
-        return JsonResponse({'success': True, 'message': 'Mascota eliminada exitosamente'})
-    else:
-        return JsonResponse({'success': False, 'message': 'Método no permitido'})
+def mascota_id_list(request, id_mascota):
+    mascota = Mascota.objects.values().get(id=id_mascota)
+    return JsonResponse( mascota)
 
 def mascota_like(request, id_mascota):
     mascota = Mascota.objects.get(id=id_mascota)
@@ -76,37 +79,6 @@ def mascota_like(request, id_mascota):
     return JsonResponse({'success': True, 'message': '¡Like agregado correctamente!', 'likes': mascota.likes})
 
 
-def adopcion_create(request):
-    if request.method == 'POST':
-        form = AdopcionForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('adopcion_list')
-    else:
-        form = AdopcionForm()
-    return render(request, 'adopcion/adopcion_form.html', {'form': form})
-def adopcion_list(request):
-    adopciones = Adopcion.objects.all()
-    return render(request, 'adopcion/adopcion_list.html', {'adopciones': adopciones})
-def adopcion_detail(request, id_adopcion):
-    adopcion = Adopcion.objects.get(id=id_adopcion)
-    return render(request, 'adopcion/adopcion_detail.html', {'adopcion': adopcion})
-def adopcion_update(request, id_adopcion):
-    adopcion = Adopcion.objects.get(id=id_adopcion)
-    if request.method == 'POST':
-        form = AdopcionForm(request.POST, instance=adopcion)
-        if form.is_valid():
-            form.save()
-            return redirect('adopcion_list')
-    else:
-        form = AdopcionForm(instance=adopcion)
-    return render(request, 'adopcion/adopcion_form.html', {'form': form})
-def adopcion_delete(request, id_adopcion):
-    adopcion = Adopcion.objects.get(id=id_adopcion)
-    if request.method == 'POST':
-        adopcion.delete()
-        return redirect('adopcion_list')
-    return render(request, 'adopcion/adopcion_confirm_delete.html', {'adopcion': adopcion})
 
 def proceso_adopcion(request):
     data = json.loads(request.body)

@@ -6,9 +6,9 @@ from . import views
 urlpatterns = [
     path('adopcion/', (views.index), name='adopcion'),
     path('proceso-adopcion/', views.proceso_adopcion, name='proceso_adopcion'),
-    # path('mascota_view/', views.mascota_view, name='mascota_view'),
-    # path('mascota_list/', views.mascota_list, name='mascota_list'),
-    # path('mascota_edit/<uuid:id_mascota>/', views.mascota_edit, name='mascota_edit'),
-    # path('mascota_delete/<uuid:id_mascota>/', views.mascota_delete, name='mascota_delete'),
+    path('api_lista/', views.mascota_list, name='mascota_list'),
+    path('lista/<int:id_usuario>/', views.mascota_usuario_list, name='mascota_usuario_list'),
+    path('datatables_lista/<int:id_usuario>', views.mascota_datatables_list, name='mascota_datatables_list'),
     path('mascota_like/<uuid:id_mascota>/', views.mascota_like, name='mascota_like'),
+    path('obtener/<uuid:id_mascota>', views.mascota_id_list, name='mascota_id_list'),
 ]

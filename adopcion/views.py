@@ -2,37 +2,33 @@
 
 from django.shortcuts import render, redirect
 from .forms import AdopcionForm
-from api.models import Adopcion
-from django.contrib.auth.decorators import login_required
+from api.models import Adopcion,Persona
+from django.http import JsonResponse
 
-def adopcion_create(request):
-    if request.method == 'POST':
-        form = AdopcionForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('adopcion_list')
-    else:
-        form = AdopcionForm()
-    return render(request, 'adopcion/adopcion_form.html', {'form': form})
-def adopcion_list(request):
-    adopciones = Adopcion.objects.all()
-    return render(request, 'adopcion/adopcion_list.html', {'adopciones': adopciones})
-def adopcion_detail(request, id_adopcion):
-    adopcion = Adopcion.objects.get(id=id_adopcion)
-    return render(request, 'adopcion/adopcion_detail.html', {'adopcion': adopcion})
-def adopcion_update(request, id_adopcion):
-    adopcion = Adopcion.objects.get(id=id_adopcion)
-    if request.method == 'POST':
-        form = AdopcionForm(request.POST, instance=adopcion)
-        if form.is_valid():
-            form.save()
-            return redirect('adopcion_list')
-    else:
-        form = AdopcionForm(instance=adopcion)
-    return render(request, 'adopcion/adopcion_form.html', {'form': form})
-def adopcion_delete(request, id_adopcion):
-    adopcion = Adopcion.objects.get(id=id_adopcion)
-    if request.method == 'POST':
-        adopcion.delete()
-        return redirect('adopcion_list')
-    return render(request, 'adopcion/adopcion_confirm_delete.html', {'adopcion': adopcion})
+
+def adopciones_usuario_list(request,id_usuario):
+    persona = Persona.objects.get(user__id=id_usuario)
+    adopciones_aprobadas = Adopcion.objects.filter(usuario_adoptante=persona, estado_adopcion__estado='Aprobado')
+    mascotas_aprobadas = [adopcion.mascota for adopcion in adopciones_aprobadas]
+    contexto = {'mascotas_aprobadas': mascotas_aprobadas}
+    return render(request, 'lista_solicitudes.html', contexto)
+
+
+def adopciones_info(request, id_usuario):
+    persona = Persona.objects.get(user__id=id_usuario)
+    adopciones = Adopcion.objects.filter(usuario_adoptante=persona)
+
+    data = []
+    for adopcion in adopciones:
+        data.append({
+            'codigo': adopcion.mascota.codigo,
+            'nombre': adopcion.mascota.nombre,
+            'edad': adopcion.mascota.edad,
+            'descripcion': adopcion.mascota.descripcion,
+            'color': adopcion.mascota.color,
+            'imagen': adopcion.mascota.imagen_set.first().imagen.url,
+            'especie': adopcion.mascota.especie.nombre,
+            'adopcion_estado': adopcion.estado_adopcion.estado,
+        })
+
+    return JsonResponse(data, safe=False)

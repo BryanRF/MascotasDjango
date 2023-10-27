@@ -1,0 +1,116 @@
+
+{% extends 'base/layout.html' %}
+{% load static %}
+{% block content %}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-1.13.6/b-2.4.2/r-2.5.0/sb-1.6.0/sp-2.2.0/sl-1.7.0/sr-1.3.0/datatables.min.css" rel="stylesheet">
+ 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-1.13.6/b-2.4.2/r-2.5.0/sb-1.6.0/sp-2.2.0/sl-1.7.0/sr-1.3.0/datatables.min.js"></script>
+  <link href="{% static 'assets/css/theme.css' %}" rel="stylesheet" />
+  <section class="py-5 bg-warning " >
+
+    <div class="container bg-warning ">
+      <div class="heading_container heading_center">
+       
+        <div class="col-lg-6 text-center mx-auto mb-3 mb-md-5 mt-4 ">
+          <h5 class="fw-bold text-danger  badge-danger  fs-3 fs-lg-5 lh-sm my-6">Mis solicitudes</h5>
+          <a class="btn btn-success heading_center heading_container" href="{% url 'adopcion' %}">Realizar nueva solicitud</a>
+        </div>
+
+      </div>
+      <div class="filters-content container bg-white card p-3">
+        <table id="adopcionesTable" class="w-100 table">
+    <thead>
+        <tr>
+          <th>Código de Mascota</th>
+          <th>Nombre de Mascota</th>
+          <th>Edad de Mascota</th>
+          <th>Descripción de Mascota</th>
+          <th>Color de Mascota</th>
+          <th>Imagen de Mascota</th>
+          <th>Especie de Mascota</th>
+          <th>Estado de Adopción</th>
+        </tr>
+    </thead>
+    <tbody class="fw-bold">
+       
+    </tbody>
+</table>
+      </div>
+      {% if user.is_authenticated %}
+  <script>
+    $(document).ready(function() {
+      const adopcionesTable = $('#adopcionesTable').DataTable({
+        "responsive":"true",
+          "ajax": {
+              "url": "/adopcion/solicitudes_adopcion/{{ user.id }}",  // Reemplaza con la URL correcta
+              "dataSrc": ""
+          },
+          "columns": [
+              { "data": "codigo" },
+              { "data": "nombre" },
+              { "data": "edad" },
+              { "data": "descripcion" },
+              { "data": "color" },
+              { 
+                  "data": "imagen",
+                  "render": function (data) {
+                      return `<img src="${data}" alt="Imagen de la mascota" style="cursor: pointer;" title="ver imagen" onclick="mostrarImagen('${data}')" width="60" height="50" class="img-fluid rounded-circle">`;
+                  }
+              },
+              { "data": "especie" },
+              { "data": "adopcion_estado" }
+          ]
+      });
+  });
+  
+  
+
+      {% endif %}
+    
+    
+    function adoptar(id) {
+        // Aquí puedes implementar la lógica para adoptar una mascota con el ID proporcionado
+        console.log('Adoptando mascota con ID:', id);
+    }
+    
+    // Llamar a la función cuando se cargue la página
+    
+  // Agrega este código después de inicializar la tabla DataTable
+  $('table.display').on('click', '.btn-copy', function() {
+    var codigo = $(this).data('codigo');
+
+    var tempInput = document.createElement('input');
+    tempInput.value = codigo;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+
+    Swal.fire({
+        position: 'top-end',
+        icon: 'success',
+        title: '¡Código copiado!',
+        showConfirmButton: false,
+        timer: 1500
+    });
+});
+function mostrarImagen(url) {
+  Swal.fire({
+      imageUrl: url,
+      imageWidth: 400,
+      imageHeight: 300,
+      imageAlt: 'Imagen de mascota',
+      showCloseButton: true,
+      confirmButtonText: 'Cerrar'
+  });
+}
+
+
+  </script>
+    </div>
+  </section>
+  {% endblock %}
+  <!-- end client section -->
