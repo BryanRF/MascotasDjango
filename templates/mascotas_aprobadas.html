@@ -1,27 +1,32 @@
+{% extends 'base/layout.html' %} {% load static %} {% block content %}
 
-{% extends 'base/layout.html' %}
-{% load static %}
-{% block content %}
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
+  rel="stylesheet"
+/>
+<link
+  href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-1.13.6/b-2.4.2/r-2.5.0/sb-1.6.0/sp-2.2.0/sl-1.7.0/sr-1.3.0/datatables.min.css"
+  rel="stylesheet"
+/>
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-1.13.6/b-2.4.2/r-2.5.0/sb-1.6.0/sp-2.2.0/sl-1.7.0/sr-1.3.0/datatables.min.css" rel="stylesheet">
- 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-1.13.6/b-2.4.2/r-2.5.0/sb-1.6.0/sp-2.2.0/sl-1.7.0/sr-1.3.0/datatables.min.js"></script>
-  <link href="{% static 'assets/css/theme.css' %}" rel="stylesheet" />
-  <section class="py-5 bg-warning " >
-
-    <div class="container bg-warning ">
-      <div class="heading_container heading_center">
-       
-        <div class="col-lg-6 text-center mx-auto mb-3 mb-md-5 mt-4">
-          <h5 class="fw-bold text-danger fs-3 fs-lg-5 lh-sm my-6"> Mis mascotas</h5>
-        </div>
+<link href="{% static 'assets/css/theme.css' %}" rel="stylesheet" />
+<section class="py-5 bg-warning">
+  <div class="container bg-warning">
+    <div class="heading_container heading_center">
+      <div class="col-lg-6 text-center mx-auto mb-3 mb-md-5 mt-4">
+        <h5
+          class="fw-bold text-white badge-back te fs-3 fs-lg-5 lh-sm badge bg-dark ,l-"
+        >
+          Mis mascotas
+        </h5>
       </div>
-      <div class="filters-content container bg-white card p-3">
-        <table id="mascotasTable" class="w-100 table">
-    <thead>
-        <tr>
+    </div>
+    <div class="filters-content container bg-white card p-3">
+      <table id="mascotasTable" class="w-100 table">
+        <thead>
+          <tr>
             <th>Código</th>
             <th>Imagen</th>
             <th>Nombre</th>
@@ -33,99 +38,119 @@
             <th>Tamaño</th>
             <th>Género</th>
             <th>Likes</th>
-           
-        </tr>
-    </thead>
-    <tbody >
-       
-    </tbody>
-</table>
-      </div>
-      {% if user.is_authenticated %}
-  <script>
-    $(document).ready(function() {
-      const mascotasTable = $('#mascotasTable').DataTable({
-        "responsive":"true",
-          "ajax": {
-              "url": "/mascota/datatables_lista/{{ user.id }}",
-              "dataSrc": ""
-          },
-          "columns": [
-              { "data": "codigo" },
-              { 
-                  "data": "imagen",
-                  "render": function (data) {
-                      return `<img src="${data}" alt="Imagen de la mascota" style="cursor: pointer;" title="ver imagen" onclick="mostrarImagen('${data}')" width="60" height="50" class="img-fluid rounded-circle">`;
-                  }
-              },
-              { "data": "nombre" },
-              { "data": "especie" },
-              { "data": "edad" },
-              { "data": "descripcion" },
-              { 
-                  "data": "disponible",
-                  "render": function (data) {
-                      return data ? 'Sí' : 'No';
-                  }
-              },
-              { "data": "color" },
-              { "data": "tamano" },
-              { "data": "genero" },
-              { "data": "likes" },
-              
-          ]
-      });
-  
-      function adoptar(id) {
-          // Implementa la lógica para adoptar una mascota con el ID proporcionado
-          console.log('Adoptando mascota con ID:', id);
-      }
-  });
-  
-
-      {% endif %}
-    
-    
-    function adoptar(id) {
-        // Aquí puedes implementar la lógica para adoptar una mascota con el ID proporcionado
-        console.log('Adoptando mascota con ID:', id);
-    }
-    
-    // Llamar a la función cuando se cargue la página
-    
-  // Agrega este código después de inicializar la tabla DataTable
-  $('table.display').on('click', '.btn-copy', function() {
-    var codigo = $(this).data('codigo');
-
-    var tempInput = document.createElement('input');
-    tempInput.value = codigo;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand('copy');
-    document.body.removeChild(tempInput);
-
-    Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: '¡Código copiado!',
-        showConfirmButton: false,
-        timer: 1500
-    });
-});
-function mostrarImagen(url) {
-  Swal.fire({
-      imageUrl: url,
-      imageWidth: 400,
-      imageHeight: 300,
-      imageAlt: 'Imagen de mascota',
-      showCloseButton: true,
-      confirmButtonText: 'Cerrar'
-  });
-}
-
-
-  </script>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
     </div>
-  </section>
-  {% endblock %}
-  <!-- end client section -->
+    {% if user.is_authenticated %}
+    <script>
+          $(document).ready(function() {
+            const mascotasTable = $('#mascotasTable').DataTable({
+              "responsive":"true",
+                "ajax": {
+                    "url": "/mascota/datatables_lista/{{ user.id }}",
+                    "dataSrc": ""
+                },
+                "columns": [
+                    { "data": "codigo" },
+                    {
+                        "data": "imagen",
+                        "render": function (data) {
+                            return `<img src="${data}" alt="Imagen de la mascota" style="cursor: pointer;" title="ver imagen" onclick="mostrarImagen('${data}')" width="60" height="50" class="img-fluid rounded-circle">`;
+                        }
+                    },
+                    { "data": "nombre" },
+                    { "data": "especie" },
+                    { "data": "edad" },
+                    { "data": "descripcion" },
+                    {
+                        "data": "disponible",
+                        "render": function (data) {
+                            return data ? 'Sí' : 'No';
+                        }
+                    },
+                    { "data": "color" },
+                    { "data": "tamano" },
+                    { "data": "genero" },
+                    { "data": "likes" },
+
+                ],
+                "language": {
+                "sProcessing":     "Procesando...",
+                "sLengthMenu":     "Mostrar _MENU_ registros",
+                "sZeroRecords":    "No se encontraron resultados",
+                "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                "sInfoPostFix":    "",
+                "sSearch":         "Buscar:",
+                "sUrl":            "",
+                "sInfoThousands":  ",",
+                "sLoadingRecords": "Cargando...",
+                "oPaginate": {
+                    "sFirst":    "Primero",
+                    "sLast":     "Último",
+                    "sNext":     "Siguiente",
+                    "sPrevious": "Anterior"
+                },
+                "oAria": {
+                    "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                    "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                },
+
+            },
+            });
+
+            function adoptar(id) {
+                // Implementa la lógica para adoptar una mascota con el ID proporcionado
+                console.log('Adoptando mascota con ID:', id);
+            }
+        });
+
+
+            {% endif %}
+
+
+          function adoptar(id) {
+              // Aquí puedes implementar la lógica para adoptar una mascota con el ID proporcionado
+              console.log('Adoptando mascota con ID:', id);
+          }
+
+          // Llamar a la función cuando se cargue la página
+
+        // Agrega este código después de inicializar la tabla DataTable
+        $('table.display').on('click', '.btn-copy', function() {
+          var codigo = $(this).data('codigo');
+
+          var tempInput = document.createElement('input');
+          tempInput.value = codigo;
+          document.body.appendChild(tempInput);
+          tempInput.select();
+          document.execCommand('copy');
+          document.body.removeChild(tempInput);
+
+          Swal.fire({
+              position: 'top-end',
+              icon: 'success',
+              title: '¡Código copiado!',
+              showConfirmButton: false,
+              timer: 1500
+          });
+      });
+      function mostrarImagen(url) {
+        Swal.fire({
+            imageUrl: url,
+            imageWidth: 400,
+            imageHeight: 300,
+            imageAlt: 'Imagen de mascota',
+            showCloseButton: true,
+            confirmButtonText: 'Cerrar'
+        });
+      }
+    </script>
+  </div>
+</section>
+{% endblock %}
+<!-- end client section -->

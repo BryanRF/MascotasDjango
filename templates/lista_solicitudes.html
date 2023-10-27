@@ -1,116 +1,201 @@
+{% extends 'base/layout.html' %} {% load static %} {% block content %}
 
-{% extends 'base/layout.html' %}
-{% load static %}
-{% block content %}
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css"
+  rel="stylesheet"
+/>
+<link
+  href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-1.13.6/b-2.4.2/r-2.5.0/sb-1.6.0/sp-2.2.0/sl-1.7.0/sr-1.3.0/datatables.min.css"
+  rel="stylesheet"
+/>
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-1.13.6/b-2.4.2/r-2.5.0/sb-1.6.0/sp-2.2.0/sl-1.7.0/sr-1.3.0/datatables.min.css" rel="stylesheet">
- 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-1.13.6/b-2.4.2/r-2.5.0/sb-1.6.0/sp-2.2.0/sl-1.7.0/sr-1.3.0/datatables.min.js"></script>
-  <link href="{% static 'assets/css/theme.css' %}" rel="stylesheet" />
-  <section class="py-5 bg-warning " >
-
-    <div class="container bg-warning ">
-      <div class="heading_container heading_center">
-       
-        <div class="col-lg-6 text-center mx-auto mb-3 mb-md-5 mt-4 ">
-          <h5 class="fw-bold text-danger  badge-danger  fs-3 fs-lg-5 lh-sm my-6">Mis solicitudes</h5>
-          <a class="btn btn-success heading_center heading_container" href="{% url 'adopcion' %}">Realizar nueva solicitud</a>
-        </div>
-
+<link href="{% static 'assets/css/theme.css' %}" rel="stylesheet" />
+<section class="py-5 bg-warning">
+  <div class="container bg-warning">
+    <div class="heading_container heading_center">
+      <div class="col-lg-6 text-center mx-auto mb-3 mb-md-5 mt-4">
+        <h5
+          class="fw-bold text-white badge-back te fs-3 fs-lg-5 lh-sm badge bg-dark ,l-"
+        >
+          Mis solicitudes
+        </h5>
       </div>
-      <div class="filters-content container bg-white card p-3">
-        <table id="adopcionesTable" class="w-100 table">
-    <thead>
-        <tr>
-          <th>Código de Mascota</th>
-          <th>Nombre de Mascota</th>
-          <th>Edad de Mascota</th>
-          <th>Descripción de Mascota</th>
-          <th>Color de Mascota</th>
-          <th>Imagen de Mascota</th>
-          <th>Especie de Mascota</th>
-          <th>Estado de Adopción</th>
-        </tr>
-    </thead>
-    <tbody class="fw-bold">
-       
-    </tbody>
-</table>
-      </div>
-      {% if user.is_authenticated %}
-  <script>
-    $(document).ready(function() {
-      const adopcionesTable = $('#adopcionesTable').DataTable({
-        "responsive":"true",
-          "ajax": {
-              "url": "/adopcion/solicitudes_adopcion/{{ user.id }}",  // Reemplaza con la URL correcta
-              "dataSrc": ""
-          },
-          "columns": [
-              { "data": "codigo" },
-              { "data": "nombre" },
-              { "data": "edad" },
-              { "data": "descripcion" },
-              { "data": "color" },
-              { 
-                  "data": "imagen",
-                  "render": function (data) {
-                      return `<img src="${data}" alt="Imagen de la mascota" style="cursor: pointer;" title="ver imagen" onclick="mostrarImagen('${data}')" width="60" height="50" class="img-fluid rounded-circle">`;
-                  }
-              },
-              { "data": "especie" },
-              { "data": "adopcion_estado" }
-          ]
-      });
-  });
-  
-  
-
-      {% endif %}
-    
-    
-    function adoptar(id) {
-        // Aquí puedes implementar la lógica para adoptar una mascota con el ID proporcionado
-        console.log('Adoptando mascota con ID:', id);
-    }
-    
-    // Llamar a la función cuando se cargue la página
-    
-  // Agrega este código después de inicializar la tabla DataTable
-  $('table.display').on('click', '.btn-copy', function() {
-    var codigo = $(this).data('codigo');
-
-    var tempInput = document.createElement('input');
-    tempInput.value = codigo;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand('copy');
-    document.body.removeChild(tempInput);
-
-    Swal.fire({
-        position: 'top-end',
-        icon: 'success',
-        title: '¡Código copiado!',
-        showConfirmButton: false,
-        timer: 1500
-    });
-});
-function mostrarImagen(url) {
-  Swal.fire({
-      imageUrl: url,
-      imageWidth: 400,
-      imageHeight: 300,
-      imageAlt: 'Imagen de mascota',
-      showCloseButton: true,
-      confirmButtonText: 'Cerrar'
-  });
-}
-
-
-  </script>
     </div>
-  </section>
-  {% endblock %}
-  <!-- end client section -->
+    <div class="filters-content container bg-white card p-3">
+      <a
+        class="btn btn-danger heading_center heading_container ms-auto mb-3"
+        href="{% url 'adopcion' %}"
+        >Realizar nueva solicitud</a
+      >
+      <table id="adopcionesTable" class="w-100 table">
+        <thead>
+          <tr>
+            <th>Código de Mascota</th>
+            <th>Nombre de Mascota</th>
+            <th>Edad de Mascota</th>
+            <th>Descripción de Mascota</th>
+            <th>Color de Mascota</th>
+            <th>Imagen de Mascota</th>
+            <th>Especie de Mascota</th>
+            <th>Estado de Adopción</th>
+            <th>Accion</th>
+          </tr>
+        </thead>
+        <tbody class="fw-bold"></tbody>
+      </table>
+    </div>
+    {% if user.is_authenticated %}
+    <script>
+
+                  const adopcionesTable = $('#adopcionesTable').DataTable({
+                    "responsive":"true",
+                      "ajax": {
+                          "url": "/adopcion/solicitudes_adopcion/{{ user.id }}",  // Reemplaza con la URL correcta
+                          "dataSrc": ""
+                      },
+                      "language": {
+                      "sProcessing":     "Procesando...",
+                      "sLengthMenu":     "Mostrar _MENU_ registros",
+                      "sZeroRecords":    "No se encontraron resultados",
+                      "sEmptyTable":     "Ningún dato disponible en esta tabla",
+                      "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                      "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+                      "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+                      "sInfoPostFix":    "",
+                      "sSearch":         "Buscar:",
+                      "sUrl":            "",
+                      "sInfoThousands":  ",",
+                      "sLoadingRecords": "Cargando...",
+                      "oPaginate": {
+                          "sFirst":    "Primero",
+                          "sLast":     "Último",
+                          "sNext":     "Siguiente",
+                          "sPrevious": "Anterior"
+                      },
+                      "oAria": {
+                          "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                          "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+                      },
+
+                  },
+                      "columns": [
+                          { "data": "codigo" },
+                          { "data": "nombre" },
+                          { "data": "edad" },
+                          { "data": "descripcion" },
+                          { "data": "color" },
+                          {
+                              "data": "imagen",
+                              "render": function (data) {
+                                  return `<img src="${data}" alt="Imagen de la mascota" style="cursor: pointer;" title="ver imagen" onclick="mostrarImagen('${data}')" width="60" height="50" class="img-fluid rounded-circle">`;
+                              }
+                          },
+                          { "data": "especie" },
+                          {
+                      "data": "adopcion_estado",
+                      "render": function (data) {
+                          if (data === "Pendiente") {
+                              return '<span class="badge bg-warning">Pendiente</span>';
+                          } else if (data === "Aprobada") {
+                              return '<span class="badge bg-success">Aprobada</span>';
+                          } else if (data === "Anulada") {
+                              return '<span class="badge bg-danger">Anulada</span>';
+                          } else {
+                              return data;
+                          }
+                      }
+                  },
+                  {
+                      "data": "solicitud_id",
+                      "render": function (data) {
+                          return `<button type="button" id="${data}"  class="btn btn-danger btn-sm" onclick="confirmarEliminacion(this.id)"><i class="bi bi-trash"></i></button>`;
+                      }
+                  }
+                      ]
+                  });
+
+
+
+                  {% endif %}
+
+
+
+
+                  function confirmarEliminacion(codigo) {
+          Swal.fire({
+              title: '¿Estás seguro?',
+              text: 'Esta acción no se puede deshacer',
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#d33',
+              cancelButtonColor: '#3085d6',
+              confirmButtonText: 'Sí, eliminar',
+              cancelButtonText: 'Cancelar'
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  eliminarRegistro(codigo);
+              }
+          });
+      }
+      function eliminarRegistro(codigo) {
+        var base_url = "{{ request.scheme }}://{{ request.get_host }}";
+        fetch(`${base_url}/adopcion/eliminar/${codigo}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),  // Asegúrate de tener el token CSRF disponible
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.mensaje === 'Adopción eliminada correctamente') {
+                    Swal.fire('Eliminado', 'La adopción ha sido eliminada correctamente', 'success');
+                    adopcionesTable.clear().draw(false);
+                    adopcionesTable.draw(false);
+                    adopcionesTable.ajax.reload();
+                } else {
+                    Swal.fire('Error', 'Hubo un error al intentar eliminar la adopción', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire('Error', 'Hubo un error al intentar eliminar la adopción', 'error');
+            });
+      }
+
+              // Agrega este código después de inicializar la tabla DataTable
+              $('table.display').on('click', '.btn-copy', function() {
+                var codigo = $(this).data('codigo');
+
+                var tempInput = document.createElement('input');
+                tempInput.value = codigo;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: '¡Código copiado!',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            });
+            function mostrarImagen(url) {
+              Swal.fire({
+                  imageUrl: url,
+                  imageWidth: 400,
+                  imageHeight: 300,
+                  imageAlt: 'Imagen de mascota',
+                  showCloseButton: true,
+                  confirmButtonText: 'Cerrar'
+              });
+            }
+    </script>
+  </div>
+</section>
+{% endblock %}
+<!-- end client section -->

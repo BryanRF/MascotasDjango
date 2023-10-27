@@ -1,43 +1,85 @@
-{% extends 'base/layout.html' %}
-{% load static %}
-{% block content %}
+{% extends 'base/layout.html' %} {% load static %} {% block content %}
 
 <section class="py-5 overflow-hidden bg-primary" id="home">
   <div class="container">
     <div class="row flex-center">
-      <div class="col-md-5 col-lg-6 order-0 order-md-1 mt-8 mt-md-0"><a class="img-landing-banner" href="#!">
-        
- 
-          
-            <img id="evento-imagen-{{ forloop.counter }}" style="border-radius: 20%" class="img-fluid " src="{% static 'assets/img/eventos/1.png' %}" alt="..." />
-          </a></div>
+      <div class="col-md-5 col-lg-6 order-0 order-md-1 mt-8 mt-md-0">
+        <a class="img-landing-banner" href="#!">
+          <img
+            id="evento-imagen-{{ forloop.counter }}"
+            style="border-radius: 20%"
+            class="img-fluid"
+            src="{% static 'assets/img/eventos/1.png' %}"
+            alt="..."
+          />
+        </a>
+      </div>
       <div class="col-md-7 col-lg-6 py-8 text-md-start text-center">
-        <h1 class="display-1 fs-md-5 fs-lg-6 fs-xl-8 text-light">{{ evento.nombre }} {{ evento.fecha_inicio }}</h1>
-        <h1 class="text-800 mb-5 fs-4">Puedes participar hasta el <br class="d-none d-xxl-block" />
-           {{ evento.fecha_fin_participacion }}</h1>
+        <h1 class="display-1 fs-md-5 fs-lg-6 fs-xl-8 text-light">
+          {{ evento.nombre }} {{ evento.fecha_inicio }}
+        </h1>
+        <h1 class="text-800 mb-5 fs-4">
+          Puedes participar hasta el <br class="d-none d-xxl-block" />
+          {{ evento.fecha_fin_participacion }}
+        </h1>
         <div class="card w-xxl-75">
           <div class="card-body">
             <nav>
               <div class="nav nav-tabs" id="nav-tab" role="tablist">
-          
-                <button class="nav-link mb-3 active" id="nav-profile-tab" data-bs-toggle="tab"
-                  data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
-                  aria-selected="false"><i class="bi bi-cash me-2"></i>Separar tu ticket para {{ user.username }}</button>
+                <button
+                  class="nav-link mb-3 active"
+                  id="nav-profile-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#nav-profile"
+                  type="button"
+                  role="tab"
+                  aria-controls="nav-profile"
+                  aria-selected="false"
+                >
+                  <i class="bi bi-cash me-2"></i>Separar tu ticket
+                  {{user.username }}
+                </button>
               </div>
             </nav>
             <div class="tab-content mt-3" id="nav-tabContent">
-             
-              <div class="tab-pane fade show active" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+              <div
+                class="tab-pane fade show active"
+                id="nav-profile"
+                role="tabpanel"
+                aria-labelledby="nav-profile-tab"
+              >
                 <form class="row gx-4 gy-2 align-items-center">
                   <div class="col">
-                    <div class="input-group-icon"><i class="fas fa-user text-danger input-box-icon"></i>
-                      <label class="visually-hidden" for="inputPickup">Cantidad</label>
-                      <input class="form-control input-box form-foodwagon-control" min="1" value="1" id="inputPickup" type="number"
-                        placeholder="Cantidad" />
+                    <div class="input-group-icon">
+                      <i class="fas fa-user text-danger input-box-icon"></i>
+                      <label class="visually-hidden" for="inputPickup"
+                        >Cantidad</label
+                      >
+                      <input
+                        class="form-control input-box form-foodwagon-control"
+                        min="1"
+                        value="1"
+                        id="inputPickup"
+                        type="number"
+                        placeholder="Cantidad"
+                      />
                     </div>
                   </div>
                   <div class="d-grid gap-3 col-sm-auto">
-                    <button class="btn btn-danger" id="ParticiparEvento" data-precio="{{evento.costo_participacion}}" type="button">Participar</button>
+                    {% if user.is_authenticated %}
+                    <button
+                      class="btn btn-danger"
+                      id="ParticiparEvento"
+                      data-precio="{{evento.costo_participacion}}"
+                      type="button"
+                    >
+                      Participar
+                    </button>
+                    {% else %}
+                    <button class="btn btn-danger" type="button" disabled>
+                      Inicie Sesion para participar
+                    </button>
+                    {% endif %}
                   </div>
                 </form>
               </div>
@@ -55,7 +97,7 @@
     btnParticipar.addEventListener('click', function() {
       const precioParticipacion = parseFloat(btnParticipar.dataset.precio);
     const cantidad = parseInt(inputCantidad.value);
-  
+
       Swal.fire({
         title: '¿Quieres participar?',
         text: `El total a pagar será: ${precioParticipacion*cantidad} nuevos soles.`,
@@ -67,16 +109,16 @@
         cancelButtonText: 'Cancelar'
       }).then((result) => {
         if (result.isConfirmed) {
-          const cantidad = document.getElementById('inputPickup').value;  
-          const usuarioId ={{ user.id }}; 
-          const eventoId ='{{ evento.id }}';  
+          const cantidad = document.getElementById('inputPickup').value;
+          const usuarioId ={{ user.id }};
+          const eventoId ='{{ evento.id }}';
           enviarRegistro(usuarioId, cantidad,eventoId);
         }
       });
     });
-  
 
-  
+
+
     function enviarRegistro(usuarioId, cantidad,eventoId) {
       fetch("{% url 'registrar_ticket'%}", {
         method: 'POST',
@@ -98,91 +140,150 @@
           text: data.message,
           confirmButtonColor: '#FFB30E',
       });
+      if (data.tickets_registrados && data.tickets_registrados.length > 0) {
+      const listaTickets = document.createElement('ul');
+      data.tickets_registrados.forEach(ticket => {
+        const listItem = document.createElement('li');
+        listItem.textContent = `Ticket: ${ticket}`;
+        listaTickets.appendChild(listItem);
+      });
+
+      Swal.fire({
+        title: 'Tickets Registrados',
+        html: listaTickets,
+        icon: 'info',
+        confirmButtonColor: '#FFB30E'
+      });
+    }
       })
       .catch(error => {
         console.error('Error:', error);
       });
     }
-  </script>
+</script>
 <section class="py-0 bg-primary-gradient">
-
   <div class="container">
     <div class="row justify-content-center g-0">
       <div class="col-xl-9">
         <div class="col-lg-6 text-center mx-auto mb-3 mb-md-5 mt-4">
-          <h5 class="fw-bold text-danger fs-3 fs-lg-5 lh-sm my-6">Nuestro trabajo</h5>
+          <h5 class="fw-bold text-danger fs-3 fs-lg-5 lh-sm my-6">
+            Nuestro trabajo
+          </h5>
         </div>
         <div class="row">
           <div class="col-sm-6 col-md-3 mb-6">
-            <div class="text-center"><img class="shadow-icon" src="{% static 'assets/img/gallery/location.png' %}"
-                height="112" alt="..." />
+            <div class="text-center">
+              <img
+                class="shadow-icon"
+                src="{% static 'assets/img/gallery/location.png' %}"
+                height="112"
+                alt="..."
+              />
               <h5 class="mt-4 fw-bold">Proceso de Nuevas Llegadas</h5>
             </div>
           </div>
           <div class="col-sm-6 col-md-3 mb-6">
-            <div class="text-center"><img class="shadow-icon" src="{% static 'assets/img/gallery/order.png' %}"
-                height="112" alt="..." />
-              <h5 class="mt-4 fw-bold">Dale la Bienvenida a tu Nuevo Miembro de Familia</h5>
+            <div class="text-center">
+              <img
+                class="shadow-icon"
+                src="{% static 'assets/img/gallery/order.png' %}"
+                height="112"
+                alt="..."
+              />
+              <h5 class="mt-4 fw-bold">
+                Dale la Bienvenida a tu Nuevo Miembro de Familia
+              </h5>
             </div>
           </div>
           <div class="col-sm-6 col-md-3 mb-6">
-            <div class="text-center"><img class="shadow-icon" src="{% static 'assets/img/gallery/pay.png' %}"
-                height="112" alt="..." />
-              <h5 class="mt-4 fw-bold">Recoleccion de fondos para medicina y alimentos</h5>
+            <div class="text-center">
+              <img
+                class="shadow-icon"
+                src="{% static 'assets/img/gallery/pay.png' %}"
+                height="112"
+                alt="..."
+              />
+              <h5 class="mt-4 fw-bold">
+                Recoleccion de fondos para medicina y alimentos
+              </h5>
             </div>
           </div>
           <div class="col-sm-6 col-md-3 mb-6">
-            <div class="text-center"><img class="shadow-icon" src="{% static 'assets/img/gallery/meals.png' %}"
-                height="112" alt="..." />
-              <h5 class="mt-4 fw-bold"> Explora a Nuestros Amigos Peludos</h5>
+            <div class="text-center">
+              <img
+                class="shadow-icon"
+                src="{% static 'assets/img/gallery/meals.png' %}"
+                height="112"
+                alt="..."
+              />
+              <h5 class="mt-4 fw-bold">Explora a Nuestros Amigos Peludos</h5>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div><!-- end of .container-->
-
+  </div>
+  <!-- end of .container-->
 </section>
 
-
-        
-
-        <!-- <section> close ============================-->
-        <!-- ============================================-->
-        <section class="pb-5 pt-8">
-          <div class="container">
-            <div class="row">
-              <div class="col-12">
-                <div class="card card-span mb-3 shadow-lg">
-                  <div class="card-body py-0">
-                    <div class="row justify-content-center">
-                      <div class="col-md-5 col-xl-7 col-xxl-8 g-0 order-0 order-md-1">
-                        <img class="img-fluid w-100 fit-cover h-100 rounded-top rounded-md-end rounded-md-top-0" src="{% static 'assets/img/gallery/pexels-helena-lopes-1938123.jpg' %}" alt="..." />
-                      </div>
-                      <div class="col-md-7 col-xl-5 col-xxl-4 p-4 p-lg-5">
-                        <h1 class="card-title mt-xl-5 mb-4">Ayuda a nuestro <span class="text-primary"> refugio a mantener los suministros suficientes</span>
-                        </h1>
-                        <p class="fs-1">Estaremos siempre a tu disposicion.</p>
-                        <div class="d-grid bottom-0">
-                          <a class="btn btn-lg btn-primary mt-xl-6" href="#!">Donar<i class="fas fa-chevron-right ms-2"></i>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+<!-- <section> close ============================-->
+<!-- ============================================-->
+<section class="pb-5 pt-8">
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <div class="card card-span mb-3 shadow-lg">
+          <div class="card-body py-0">
+            <div class="row justify-content-center">
+              <div class="col-md-5 col-xl-7 col-xxl-8 g-0 order-0 order-md-1">
+                <img
+                  class="img-fluid w-100 fit-cover h-100 rounded-top rounded-md-end rounded-md-top-0"
+                  src="{% static 'assets/img/gallery/pexels-helena-lopes-1938123.jpg' %}"
+                  alt="..."
+                />
+              </div>
+              <div class="col-md-7 col-xl-5 col-xxl-4 p-4 p-lg-5">
+                <h1 class="card-title mt-xl-5 mb-4">
+                  Ayuda a nuestro
+                  <span class="text-primary">
+                    refugio a mantener los suministros suficientes</span
+                  >
+                </h1>
+                <p class="fs-1">Estaremos siempre a tu disposicion.</p>
+                <div class="d-grid bottom-0">
+                  <a
+                    class="btn btn-lg btn-primary mt-xl-6"
+                    href="#!"
+                    id="mostrarYape"
+                    >Donar<i class="fas fa-chevron-right ms-2"></i>
+                  </a>
                 </div>
               </div>
             </div>
           </div>
-          <!-- end of .container-->
-        </section>
-        <!-- <section> close ============================-->
-        <!-- ============================================-->
-    
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- end of .container-->
+</section>
+<script>
+  const btnMostrarYape = document.getElementById("mostrarYape");
 
+  btnMostrarYape.addEventListener("click", function () {
+    Swal.fire({
+      title: "Escanea el código QR con Yape",
+      html: '<img src="https://cdn.britannica.com/17/155017-050-9AC96FC8/Example-QR-code.jpg" style="max-width: 100%; height: auto;">',
+      confirmButtonText: "Cerrar",
+      confirmButtonColor: "#FFB30E",
+      showCancelButton: false,
+    });
+  });
+</script>
+<!-- <section> close ============================-->
+<!-- ============================================-->
 
+<!-- ============================================-->
+<!-- <section> begin ============================-->
 
-    <!-- ============================================-->
-    <!-- <section> begin ============================-->
-   
-    {% endblock %}
+{% endblock %}

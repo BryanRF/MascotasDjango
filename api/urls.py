@@ -8,7 +8,6 @@ from .controller.personas.personas_controller import PersonasController
 
 urlpatterns = [
     path('registro_usuario/', PersonaView.as_view(), name='registro_usuario'),
-    path('login/',  PersonasController.login_usuario, name='login'),
     path('registrar_ticket/', EventoController.regitrar_ticket, name='registrar_ticket'),
 ]
 

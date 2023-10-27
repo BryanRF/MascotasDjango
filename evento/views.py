@@ -104,6 +104,7 @@ def registrar_ticket(request):
         usuario_id = data.get('usuarioId')
         cantidad = data.get('cantidad')
         evento_id = data.get('eventoId')
+        tickets_registrados = []    
     
         try:
             # Verificamos si el usuario y el evento existen
@@ -121,8 +122,9 @@ def registrar_ticket(request):
             for _ in range(cantidad):
                 evento_participante = EventoParticipante(evento=evento, participante=persona)
                 evento_participante.save()
+                tickets_registrados.append(evento_participante.ticket)
 
-            return JsonResponse({'message': 'Tickets registrados correctamente', 'icon': 'success', 'title': 'Éxito'}, status=200)
+            return JsonResponse({'tickets_registrados': tickets_registrados,'message': 'Tickets registrados correctamente', 'icon': 'success', 'title': 'Éxito'}, status=200)
         
         except Persona.DoesNotExist:
             return JsonResponse({'message': 'El usuario no existe', 'icon': 'error', 'title': 'Error'}, status=400)

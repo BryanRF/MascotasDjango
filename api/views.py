@@ -50,7 +50,6 @@ class PersonaView(View):
                 dni=dni,
                 email=email,
                 fecha_nacimiento=fecha_nacimiento,
-                genero=genero
             )
             persona.save()
 

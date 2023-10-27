@@ -92,6 +92,10 @@ def proceso_adopcion(request):
     if Adopcion.objects.filter(usuario_adoptante_id=persona.id, mascota_id=id_mascota, estado_adopcion__estado='Pendiente').exists():
         return JsonResponse({'message': 'Ya tienes una solicitud pendiente para esta mascota'}, status=400)
 
+    # Verificar si la mascota ya tiene una adopción aprobada
+    if Adopcion.objects.filter(mascota_id=id_mascota, estado_adopcion__estado='Aprobada').exists():
+        return JsonResponse({'message': 'Esta mascota ya ha sido adoptada por otra persona'}, status=400)
+
     # Crear la nueva solicitud de adopción
     estado_pendiente = EstadoAdopcion.objects.get(estado='Pendiente')
     Adopcion.objects.create(
@@ -102,3 +106,4 @@ def proceso_adopcion(request):
     )
 
     return JsonResponse({'message': 'Enviado'}, status=200)
+
