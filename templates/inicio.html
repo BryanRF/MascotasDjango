@@ -462,8 +462,12 @@
                         </h1>
                         <p class="fs-1">Estaremos siempre a tu disposicion.</p>
                         <div class="d-grid bottom-0">
-                          <a class="btn btn-lg btn-primary mt-xl-6" href="{% url 'adopcion'%}">Abrir formulario<i class="fas fa-chevron-right ms-2"></i>
-                          </a>
+                          <button
+                          class="btn btn-lg btn-primary mt-xl-6"
+                          type="button"
+                          id="mostrarYape2"
+                          >Donar<i class="fas fa-chevron-right ms-2"></i>
+                        </button>
                         </div>
                       </div>
                     </div>
@@ -479,6 +483,18 @@
           const btnMostrarYape = document.getElementById('mostrarYape');
 
 btnMostrarYape.addEventListener('click', function() {
+Swal.fire({
+title: 'Escanea el código QR con Yape',
+html: '<img src="https://cdn.britannica.com/17/155017-050-9AC96FC8/Example-QR-code.jpg" style="max-width: 100%; height: auto;">',
+confirmButtonText: 'Cerrar',
+confirmButtonColor: '#FFB30E',
+showCancelButton: false,
+
+});
+});
+          const btnMostrarYape2 = document.getElementById('mostrarYape2');
+
+btnMostrarYape2.addEventListener('click', function() {
 Swal.fire({
 title: 'Escanea el código QR con Yape',
 html: '<img src="https://cdn.britannica.com/17/155017-050-9AC96FC8/Example-QR-code.jpg" style="max-width: 100%; height: auto;">',
