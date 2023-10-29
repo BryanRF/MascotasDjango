@@ -28,6 +28,7 @@
         <thead>
           <tr>
             <th>Nombre Evento</th>
+            <th>Codigo</th>
             <th>Fecha Inicio</th>
             <th>Fecha Fin Participación</th>
             <th>Costo Participación</th>
@@ -37,7 +38,6 @@
         <tbody></tbody>
       </table>
     </div>
-    {% if user.is_authenticated %}
     <script>
           $(document).ready(function() {
             const eventosTable = $('#eventosTable').DataTable({
@@ -48,6 +48,12 @@
                 },
                 "columns": [
                     { "data": "nombre_evento" },
+                    {
+                        "data": "codigo",
+                        "render": function(data, type, row) {
+                            return '<button class="btn btn-primary btn-sm btn-copy" data-codigo="' + data + '">' + data + '</button>';
+                        }
+                    },
                     { "data": "fecha_inicio" },
                     { "data": "fecha_fin_participacion" },
                     { "data": "costo_participacion" },
@@ -83,7 +89,7 @@
         });
 
 
-            {% endif %}
+         
 
 
 
@@ -119,6 +125,9 @@
             confirmButtonText: 'Cerrar'
         });
       }
+      // Agrega este código después de inicializar la tabla DataTable
+
+
     </script>
   </div>
 </section>

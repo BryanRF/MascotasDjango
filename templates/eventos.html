@@ -1,6 +1,6 @@
 {% extends 'base/layout.html' %} {% load static %} {% block content %}
 
-<section class="py-5 overflow-hidden bg-primary" id="home">
+<section class=" overflow-hidden bg-primary" id="home" style="height: 100vh;">
   <div class="container">
     <div class="row flex-center">
       <div class="col-md-5 col-lg-6 order-0 order-md-1 mt-8 mt-md-0">
@@ -26,19 +26,8 @@
           <div class="card-body">
             <nav>
               <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <button
-                  class="nav-link mb-3 active"
-                  id="nav-profile-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#nav-profile"
-                  type="button"
-                  role="tab"
-                  aria-controls="nav-profile"
-                  aria-selected="false"
-                >
-                  <i class="bi bi-cash me-2"></i>Separar tu ticket
-                  {{user.username }}
-                </button>
+               
+                   <h4 class="text-danger">Codigo de evento #{{ evento.codigo }}</h4>
               </div>
             </nav>
             <div class="tab-content mt-3" id="nav-tabContent">
@@ -51,9 +40,9 @@
                 <form class="row gx-4 gy-2 align-items-center">
                   <div class="col">
                     <div class="input-group-icon">
-                      <i class="fas fa-user text-danger input-box-icon"></i>
+                      <i class="bi bi-cash  text-danger input-box-icon"></i>
                       <label class="visually-hidden" for="inputPickup"
-                        >Cantidad</label
+                        >Comprar Tickets</label
                       >
                       <input
                         class="form-control input-box form-foodwagon-control"
@@ -73,7 +62,7 @@
                       data-precio="{{evento.costo_participacion}}"
                       type="button"
                     >
-                      Participar
+                      Comprar S/.{{evento.costo_participacion}}
                     </button>
                     {% else %}
                     <button class="btn btn-danger" type="button" disabled>
@@ -110,7 +99,7 @@
       }).then((result) => {
         if (result.isConfirmed) {
           const cantidad = document.getElementById('inputPickup').value;
-          const usuarioId ={{ user.id }};
+          const usuarioId ='{{ user.id }}';
           const eventoId ='{{ evento.id }}';
           enviarRegistro(usuarioId, cantidad,eventoId);
         }
@@ -151,7 +140,7 @@
       Swal.fire({
         title: 'Tickets Registrados',
         html: listaTickets,
-        icon: 'info',
+        icon: 'success',
         confirmButtonColor: '#FFB30E'
       });
     }

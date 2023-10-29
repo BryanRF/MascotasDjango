@@ -3,6 +3,7 @@ import uuid
 from django.contrib.auth.models import User
 from PIL import Image
 from django.contrib.auth import authenticate, login
+from datetime import datetime
 from django.db.models import Max
 class Persona(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
@@ -145,6 +146,7 @@ class Adopcion(models.Model):
     
 class Evento(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
+    codigo = models.CharField(max_length=10, unique=True, null=True)
     nombre = models.CharField(max_length=300)
     fecha_inicio = models.DateField()
     fecha_fin_participacion = models.DateField()
@@ -152,9 +154,17 @@ class Evento(models.Model):
     recaudacion = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     tiene_premio = models.BooleanField(default=False)
     finalizo = models.BooleanField(default=False)
+    def fecha_inicio_formateada(self):
+        return datetime.strftime(self.fecha_inicio, "%d/%m/%Y")
 
+    def fecha_fin_participacion_formateada(self):
+        return datetime.strftime(self.fecha_fin_participacion, "%d/%m/%Y")
+    def save(self, *args, **kwargs):
+        if not self.codigo:
+            self.codigo = str(uuid.uuid4().fields[-1])[:8].upper()  # Generar un código único
+        super().save(*args, **kwargs)
     def __str__(self):
-        return f"Evento: {self.nombre} el {self.fecha_inicio}."
+        return f"Evento: {self.nombre} | Codigo: {self.codigo} | {self.fecha_inicio}."
 
 class EventoParticipante(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
@@ -175,7 +185,7 @@ class EventoParticipante(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Participante: {self.participante.nombre} en Evento: {self.evento.nombre}, Ticket: {self.ticket}"
+        return f"Evento: {self.evento.nombre}|{self.evento.codigo}, Ticket: {self.ticket}"
 
 class Premio(models.Model):
     nombre = models.CharField(max_length=100)
@@ -183,7 +193,7 @@ class Premio(models.Model):
     evento = models.ForeignKey(Evento, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return self.nombre
+         return f"Evento: {self.evento.nombre}| {self.evento.codigo}, Premio: {self.nombre}"
 
 class Ganador(models.Model):
     evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
@@ -191,4 +201,4 @@ class Ganador(models.Model):
     participante = models.ForeignKey(EventoParticipante, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return f"Ganador: {self.participante.participante.nombre} en Evento: {self.evento.nombre}, Premio: {self.premio.nombre}"
+        return f"Evento: {self.evento.nombre}|{self.evento.codigo}, Premio: {self.premio.nombre}"

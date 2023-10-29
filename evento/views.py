@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from .forms import  EventoForm, EventoParticipanteForm, PremioForm, GanadorForm
 from api.models import  Evento, EventoParticipante, Premio, Ganador,Persona
 from django.http import JsonResponse
-
+from django.utils import timezone
 
 # Vistas para Evento
 def evento_create(request):
@@ -63,13 +63,21 @@ def eventos_usuario_list(request, id_usuario):
     contexto = {'eventos_participados': eventos_participados}
     return render(request, 'lista_eventos_usuario.html', contexto)
 
-def eventos_general_list(request, id_usuario):
-    persona = Persona.objects.get(user__id=id_usuario)
-    eventos_participados = EventoParticipante.objects.filter(participante=persona).values_list('evento', flat=True)
+def eventos_general_list(request, id_usuario=None):
     eventos = Evento.objects.all()
+
+    if id_usuario:
+        try:
+            persona = Persona.objects.get(user__id=id_usuario)
+            eventos_participados = EventoParticipante.objects.filter(participante=persona).values_list('evento', flat=True)
+        except Persona.DoesNotExist:
+            eventos_participados = []
+    else:
+        eventos_participados = []
 
     contexto = {'eventos_participados': eventos_participados, 'eventos': eventos}
     return render(request, 'lista_eventos_general.html', contexto)
+
 
 
 def eventos_logeado_list(request, id_usuario):
@@ -107,9 +115,10 @@ def eventos_usuario_info(request, id_usuario):
         for participacion in eventos_participante:
             data.append({
                 'nombre_evento': participacion.evento.nombre,
-                'fecha_inicio': participacion.evento.fecha_inicio.strftime("%Y-%m-%d"),
-                'fecha_fin_participacion': participacion.evento.fecha_fin_participacion.strftime("%Y-%m-%d"),
-                'costo_participacion': str(participacion.evento.costo_participacion),
+                'codigo': participacion.evento.codigo,
+                'fecha_inicio': participacion.evento.fecha_inicio_formateada(),
+                'fecha_fin_participacion': participacion.evento.fecha_fin_participacion_formateada(),
+                'costo_participacion': "s/."+str(participacion.evento.costo_participacion),
                 'ticket': participacion.ticket,
             })
 
@@ -117,8 +126,52 @@ def eventos_usuario_info(request, id_usuario):
     except EventoParticipante.DoesNotExist:
         return JsonResponse({'error': 'Usuario no encontrado'}, status=404)
     
+def eventos_general_info(request):
+    try:
+        eventos = Evento.objects.all()
+
+        data = []
+
+        for evento in eventos:
+            evento_data = {
+                'nombre_evento': evento.nombre,
+                'fecha_inicio': evento.fecha_inicio_formateada(),
+                'fecha_fin_participacion': evento.fecha_fin_participacion_formateada(),
+                'costo_participacion': "s/. "+str(evento.costo_participacion),
+                'recaudacion': "s/. "+str(evento.recaudacion),
+                'finalizo': evento.finalizo,
+                'tiene_premio': evento.tiene_premio,
+                'codigo': evento.codigo,
+                'premios': 'Sin premios registrados' ,
+                'ganadores': 'Sin ganadores',
+            }
+
+            if evento.tiene_premio:
+                premios = Premio.objects.filter(evento=evento)
+                if premios:
+                    premio_nombres = [premio.nombre for premio in premios]
+                    premio_data = ', '.join(premio_nombres)
+                    evento_data['premios'] = premio_data
+                else:
+                    evento_data['premios'] = 'Sin premios registrados'  
+                if evento.finalizo:
+                    ganadores = Ganador.objects.filter(evento=evento)
+                    ganadores_data = []
+                    for ganador in ganadores:
+                        ganadores_data.append(f"{ganador.participante.participante.nombre} - {ganador.premio.nombre}")
+                    ganadores_str = ', '.join(ganadores_data)
+                    evento_data['ganadores'] = ganadores_str
+              
+
+            data.append(evento_data)
+
+        return JsonResponse(data, safe=False)
+    except Evento.DoesNotExist:
+        return JsonResponse({'error': 'Eventos no encontrados'}, status=404)
+
+
     
-from django.utils import timezone
+
 
 def registrar_ticket(request):
     if request.method == 'POST':
@@ -145,6 +198,10 @@ def registrar_ticket(request):
                 evento_participante = EventoParticipante(evento=evento, participante=persona)
                 evento_participante.save()
                 tickets_registrados.append(evento_participante.ticket)
+                
+                # Actualizamos la recaudación del evento
+                evento.recaudacion += evento.costo_participacion
+                evento.save()
 
             return JsonResponse({'tickets_registrados': tickets_registrados,'message': 'Tickets registrados correctamente', 'icon': 'success', 'title': 'Éxito'}, status=200)
         
@@ -157,3 +214,4 @@ def registrar_ticket(request):
 
     else:
         return JsonResponse({'message': 'Método no permitido', 'icon': 'error', 'title': 'Error'}, status=405)
+

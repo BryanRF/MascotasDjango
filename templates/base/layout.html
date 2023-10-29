@@ -674,5 +674,11 @@
       }
     </script>
     {% endif %}
+
+    {% if user.is_superuser %}
+    <script>
+            window.location.href = "{% url 'logout_view' %}";
+    </script>
+{% endif %}
   </body>
 </html>

@@ -21,6 +21,7 @@ class InicioView(ListView):
         # context['mascotas'] = Mascota.objects.all()
         context['eventos'] = Evento.objects.filter(fecha_inicio__gte=date.today())
         context['mascotas_populares'] = Mascota.objects.order_by('-likes')[:4]
+        context['mascotas_populares2'] = Mascota.objects.order_by('-likes')[4:8]
         return context
 class EventoView:
     @staticmethod

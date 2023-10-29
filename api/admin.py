@@ -15,33 +15,30 @@ class ImagenInline(admin.TabularInline):
 class VacunaInline(admin.TabularInline):
     model = Vacuna
 
-class PremioInline(admin.TabularInline):
-    model = Premio
-
 class GanadorInline(admin.TabularInline):
     model = Ganador
-
-class EventoParticipanteInline(admin.TabularInline):
-    model = EventoParticipante
+    extra = 1  # Esto determina cuántos campos adicionales de Ganador se mostrarán
 
 @admin.register(Evento)
 class EventoAdmin(admin.ModelAdmin):
-    inlines = [PremioInline, GanadorInline, EventoParticipanteInline]
-    max_premios = 5
-    min_premios = 3
+    # Define los campos que quieres mostrar en la lista de eventos
+    list_display = ('nombre', 'fecha_inicio', 'fecha_fin_participacion', 'costo_participacion', 'recaudacion', 'finalizo', 'tiene_premio')
 
-    def get_formsets_with_inlines(self, request, obj=None):
-        for inline in self.get_inline_instances(request, obj):
-            yield inline.get_formset(request, obj), inline
+    # Añade un campo de búsqueda
+    search_fields = ['nombre']
 
-    def get_inline_instances(self, request, obj=None):
-        if not obj:
-            return list()
-        if obj.premio_set.count() < self.min_premios:
-            return [PremioInline]
-        elif obj.premio_set.count() >= self.max_premios:
-            return []
-        return [PremioInline]
+    inlines = [GanadorInline]
+
+@admin.register(Premio)
+class PremioAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Ganador)
+class GanadorAdmin(admin.ModelAdmin):
+    pass
+
+
+  
 
 
 @admin.register(Persona)

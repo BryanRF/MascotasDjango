@@ -139,7 +139,7 @@
                     </div>
                   </div>
                   <div class="card-body px-0">
-                    <h5 class="fw-bold text-1000 text-truncate">{{ evento.nombre }}</h5>
+                    <h5 class="fw-bold text-1000 text-truncate">{{ evento.nombre }} {% if  evento.finalizo %}<span class="badge bg-danger"> Finalizó </span>{% endif %} </h5>
                     <span class="badge bg-soft-danger py-2 px-3">
                       <span class="fs-1 text-danger">{{ evento.fecha_inicio }}</span>
                     </span>
@@ -160,7 +160,7 @@
             
           </div>
            <div class="col-lg-6 text-center mx-auto mb-3 mb-md-5 mt-4">
-            <a  href="#"><h5 class="fw-bold  fs-3 fs-lg-5 lh-sm mt-6 badge bg-dark">Ver Eventos finalizados y sus Ganadores 🥇🥈🥉</h5></a>
+            <a  href="{% url 'lista_eventos_general' %}"><h5 class="fw-bold  fs-3 fs-lg-5 lh-sm mt-6 badge bg-dark">Ver Eventos finalizados y sus Ganadores 🥇🥈🥉</h5></a>
           </div>
           <!-- end of .container-->
          
@@ -175,12 +175,12 @@
               
               <div class="col-lg-7 mx-auto text-center mt-7 mb-5">
                 
-                <h5 class="fw-bold fs-3 fs-lg-5 lh-sm badge bg-dark">Huellitas Populares</h5>
+                <h5 class="fw-bold fs-3 fs-lg-5 lh-sm badge bg-dark">Huellitas Populares Top #8</h5>
               </div>
               <div class="col-12">
                 <div class="carousel slide" id="carouselPopularItems" data-bs-touch="false" data-bs-interval="false">
                   <div class="carousel-inner">
-                    <div class="carousel-item" data-bs-interval="10000">
+                    <div class="carousel-item active" data-bs-interval="10000">
                       <div class="row gx-3 h-100 align-items-center">
                         <!-- for aqui -->
                         {% for mascota in mascotas_populares %}
@@ -227,10 +227,10 @@
                         <!-- end for -->
                       </div>
                     </div>
-                    <div class="carousel-item active" data-bs-interval="10000">
+                    <div class="carousel-item " data-bs-interval="10000">
                       <div class="row gx-3 h-100 align-items-center">
                         <!-- for aqui -->
-                        {% for mascota in mascotas_populares %}
+                        {% for mascota in mascotas_populares2 %}
                           <div class="col-sm-6 col-md-4 col-xl mb-5 h-100 mascota-container">
                               <div class="card card-span h-100 rounded-3">
                                   <img class="img-fluid rounded-3 h-70"  style="max-height: 300px; min-height: 300px;"  src="{{ mascota.imagen_set.first.imagen.url }}" alt="{{ mascota.nombre }}" />
@@ -495,9 +495,5 @@ showCancelButton: false,
         <!-- ============================================-->
 
 
-        {% if user.is_superuser %}
-        <script>
-                window.location.href = "{% url 'logout_view' %}";
-        </script>
-    {% endif %}
+  
     {% endblock %}
