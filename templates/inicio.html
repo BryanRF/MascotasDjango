@@ -2,16 +2,17 @@
 {% load static %}
 {% block content %}
 
-<section class="py-5 overflow-hidden bg-primary" id="home">
+<section class="overflow-hidden bg-primary" id="home" style="height:100vh;">
   <div class="container">
     <div class="row flex-center">
-      <div class="col-md-5 col-lg-6 order-0 order-md-1 mt-8 mt-md-0"><a class="img-landing-banner" href="#!"><img
-            class="img-fluid " src="{% static 'assets/img/gallery/hero-header.png' %}" alt="hero-header"
-            style="border-radius: 20%" /></a></div>
+      <div class="col-md-5 col-lg-6 order-0 order-md-1 mt-5 mt-md-0">
+        <a class="rounded  img-landing-banner shadow rounded" href="#!">
+        <img class="img-fluid " src="{% static 'assets/img/gallery/hero-header.png' %}" alt="hero-header"/></a>
+      </div>
       <div class="col-md-7 col-lg-6 py-8 text-md-start text-center">
         <h1 class="display-1 fs-md-5 fs-lg-6 fs-xl-8 text-light">Necesitas ayuda?</h1>
-        <h1 class="text-800 mb-5 fs-4">Avisanos de tu caso y te atenderemos<br class="d-none d-xxl-block" />
-          en dentro de las 24 horas</h1>
+        <h1 class="text-dark mb-5 fs-4">Avisanos de tu caso y te atenderemos<br class="d-none d-xxl-block" />
+          en dentro de las 24 horas <br> <div class="badge bg-success"><i class="bi bi-whatsapp text-white "></i> 998811758</div> </h1>
         <div class="card w-xxl-75">
           <div class="card-body">
             <nav>
@@ -29,10 +30,11 @@
                 <div class="row gx-2 gy-2 align-items-center">
                   <div class="col">
                     <div class="input-group-icon">
-                  
+                     <h3> #NoCompresAdopta</h3>
                     </div>
                   </div>
                   <div class="d-grid gap-3 col-sm-auto">
+                    
                     {% if user.is_authenticated %}
                     <a class="btn btn-danger" href="{% url 'adopcion' %}">Continuar</a>
                     {% else %}
@@ -58,7 +60,7 @@
                 <form class="row gx-4 gy-2 align-items-center">
                   <div class="col">
                     <div class="input-group-icon">
-                  
+                      <h3> #AgradecidoConElDeArriba</h3>
                     </div>
                   </div>
                   <div class="d-grid gap-3 col-sm-auto">
@@ -85,13 +87,13 @@
           <div class="col-sm-6 col-md-3 mb-6">
             <div class="text-center"><img class="shadow-icon" src="{% static 'assets/img/gallery/location.png' %}"
                 height="112" alt="..." />
-              <h5 class="mt-4 fw-bold">Proceso de Nuevas Llegadas</h5>
+              <h5 class="mt-4 fw-bold">Proceso de Nuevos alojamientos de hullitas a nuestro refugio</h5>
             </div>
           </div>
           <div class="col-sm-6 col-md-3 mb-6">
             <div class="text-center"><img class="shadow-icon" src="{% static 'assets/img/gallery/order.png' %}"
                 height="112" alt="..." />
-              <h5 class="mt-4 fw-bold">Dale la Bienvenida a tu Nuevo Miembro de Familia</h5>
+              <h5 class="mt-4 fw-bold">Proceso de adopcion, dale la Bienvenida a tu Nuevo Miembro de Familia</h5>
             </div>
           </div>
           <div class="col-sm-6 col-md-3 mb-6">
@@ -103,30 +105,29 @@
           <div class="col-sm-6 col-md-3 mb-6">
             <div class="text-center"><img class="shadow-icon" src="{% static 'assets/img/gallery/meals.png' %}"
                 height="112" alt="..." />
-              <h5 class="mt-4 fw-bold"> Explora a Nuestros Amigos Peludos</h5>
+              <h5 class="mt-4 fw-bold"> Alimentamos y mantenemos sanos a nuestras huellitas</h5>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div><!-- end of .container-->
-
 </section>
     <!-- ============================================-->
   <!-- <section> begin ============================-->
-      <section class="py-0">
+      <section >
 
           <div class="container">
             <div class="col-lg-6 text-center mx-auto mb-3 mb-md-5 mt-4">
-              <h5 class="fw-bold  fs-3 fs-lg-5 lh-sm my-6">Proximos eventos</h5>
+              <h5 class="fw-bold  fs-3 fs-lg-5 lh-sm my-6 badge bg-dark">💸 Proximos eventos 🎁</h5>
             </div>
             <div class="row h-100 gx-2 mt-7">
             
               {% for evento in eventos %}
-              <div class="col-sm-6 col-lg-3 mb-3 mb-md-0 h-100 pb-4">
+              <div class="col-sm-6 col-lg-3 mb-3 mb-md-0 pb-4" >
                 <div class="card card-span h-100">
                   <div class="position-relative">
-                    <img id="evento-imagen-{{ forloop.counter }}" class="img-fluid rounded-3 w-100" src="{% static 'assets/img/eventos/1.png' %}" alt="..." />
+                    <img id="evento-imagen-{{ forloop.counter }}" class="img-fluid rounded-3 w-100 shadow" src="{% static 'assets/img/eventos/1.png' %}" alt="..." />
                     <div class="card-actions">
                       <div class="badge badge-foodwagon bg-primary p-4">
                         <div class="d-flex flex-between-center">
@@ -156,18 +157,25 @@
             });</script>
               
             </div>
+            
           </div>
-          
+           <div class="col-lg-6 text-center mx-auto mb-3 mb-md-5 mt-4">
+            <a  href="#"><h5 class="fw-bold  fs-3 fs-lg-5 lh-sm mt-6 badge bg-dark">Ver Eventos finalizados y sus Ganadores 🥇🥈🥉</h5></a>
+          </div>
           <!-- end of .container-->
-    
+         
         </section>
+      <hr>
   <!-- ============================================-->
   <!-- <section> begin ============================-->
       <section class="py-4 overflow-hidden">
           <div class="container">
+            
             <div class="row h-100">
+              
               <div class="col-lg-7 mx-auto text-center mt-7 mb-5">
-                <h5 class="fw-bold fs-3 fs-lg-5 lh-sm">Huellitas Populares</h5>
+                
+                <h5 class="fw-bold fs-3 fs-lg-5 lh-sm badge bg-dark">Huellitas Populares</h5>
               </div>
               <div class="col-12">
                 <div class="carousel slide" id="carouselPopularItems" data-bs-touch="false" data-bs-interval="false">
@@ -284,13 +292,14 @@
           </div>
           <!-- end of .container-->
         </section>
+        <hr>
         <!-- <section> close ============================-->
         <!-- ============================================-->
         <section id="testimonial">
           <div class="container">
             <div class="row h-100">
               <div class="col-lg-7 mx-auto text-center mb-6">
-                <h5 class="fw-bold fs-3 fs-lg-5 lh-sm mb-3">Todas nuestras huellitas</h5>
+                <h5 class="fw-bold fs-3 fs-lg-5 lh-sm mb-3 badge bg-dark">Todas nuestras huellitas</h5>
               </div>
             </div>
             <div class="row gx-2">
@@ -395,14 +404,14 @@
             </div>
           </div>
         </section>
-        
+        <hr>
         <!-- ============================================-->
         <!-- <section> begin ============================-->
         <section class="py-8 overflow-hidden">
           <div class="container">
-            <div class="row flex-center mb-6">
-              <div class="col-lg-7">
-                <h5 class="fw-bold fs-3 fs-lg-5 lh-sm text-center text-lg-start">Especies de nuestras huellitas</h5>
+            <div class="row h-100">
+              <div class="col-lg-7 mx-auto text-center mb-6">
+                <h5 class="fw-bold fs-3 fs-lg-5 lh-sm mb-3 badge bg-dark">Especies de nuestras huellitas</h5>
               </div>
             </div>
             <div class="row flex-center">
@@ -435,6 +444,7 @@
           </div>
           <!-- end of .container-->
         </section>
+        <hr>
         <!-- <section> close ============================-->
         <!-- ============================================-->
         <section class="pb-5 pt-8">
@@ -445,7 +455,7 @@
                   <div class="card-body py-0">
                     <div class="row justify-content-center">
                       <div class="col-md-5 col-xl-7 col-xxl-8 g-0 order-0 order-md-1">
-                        <img class="img-fluid w-100 fit-cover h-100 rounded-top rounded-md-end rounded-md-top-0" src="{% static 'assets/img/gallery/pexels-helena-lopes-1938123.jpg' %}" alt="..." />
+                        <img class="img-fluid w-100 fit-cover h-100 rounded-top rounded-md-end rounded-md-top-0" src="{% static 'assets/img/gallery/pexels-helena-lopes-1938123.webp' %}" alt="..." />
                       </div>
                       <div class="col-md-7 col-xl-5 col-xxl-4 p-4 p-lg-5">
                         <h1 class="card-title mt-xl-5 mb-4">Contactanos  <span class="text-primary"> si buscas ayuda o refugio para animales</span>
@@ -464,6 +474,7 @@
           </div>
           <!-- end of .container-->
         </section>
+      
         <script>
           const btnMostrarYape = document.getElementById('mostrarYape');
 
@@ -482,4 +493,11 @@ showCancelButton: false,
         <!-- ============================================-->
         <!-- <section> close ============================-->
         <!-- ============================================-->
+
+
+        {% if user.is_superuser %}
+        <script>
+                window.location.href = "{% url 'logout_view' %}";
+        </script>
+    {% endif %}
     {% endblock %}

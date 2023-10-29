@@ -326,6 +326,7 @@
       rel="stylesheet"
     />
     <script>
+     
       function likeMascota(mascotaId) {
         fetch(`mascota/mascota_like/${mascotaId}/`, {
           method: "PUT",
@@ -368,8 +369,9 @@
 
             // Mostrar la información en un SweetAlert
             Swal.fire({
-              confirmButtonColor: "#FFB30E",
+              confirmButtonColor: "#FB6C00",
               title: "Informacion de " + data.nombre,
+              confirmButtonText: "Regresar",
               html: `
                             <p><strong>Edad:</strong> ${data.edad}</p>
                             <p><strong>Color:</strong> ${data.color}</p>
@@ -381,6 +383,7 @@
                               data.disponible ? "Sí" : "No"
                             }</p>
                             <p><strong>Tamaño:</strong> ${data.tamano}</p>
+                            <a class="btn btn-primary btn-block mb-2" href="{% url 'adopcion' %}">Adoptar 🏠</a>
                         `,
             });
           })
@@ -467,6 +470,7 @@
             },
           });
         });
+      
       document
         .getElementById("loginButton")
         .addEventListener("click", function () {
@@ -553,14 +557,17 @@
             showCancelButton: false,
             showConfirmButton: false,
             html: `
-              <button class="btn btn-warning btn-block mb-2" onclick="verDatos({{user.id}})">Ver Mis Datos</button>
+            {% if request.path != '/' %}
+          <a class="btn btn-warning btn-block mb-2" href="{% url 'inicio'  %}">Inicio</a>
+          {% endif %}
+              <button id="enlace-inicio" class="btn btn-warning btn-block mb-2" onclick="verDatos({{user.id}})" type="button">Ver Mis Datos</button>
               <a class="btn btn-warning btn-block mb-2" href="{% url 'eventos_usuario_list' id_usuario=user.id %}">Mis Actividades</a>
               <a class="btn btn-warning btn-block mb-2" href="{% url 'mascota_usuario_list' id_usuario=user.id %}">Mis Mascotas</a>
               <a class="btn btn-warning btn-block mb-2" href="{% url 'adopciones_usuario_list' id_usuario=user.id %}">Solicitudes de adopcion</a>
           `,
           });
         });
-
+      
       function verDatos(personaId) {
         fetch(`/persona/obtener-datos/${personaId}/`)
           .then((response) => response.json())

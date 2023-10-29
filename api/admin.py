@@ -2,7 +2,7 @@ from django.contrib import admin
 from .models import (
     Persona, Mascota, Evento, Imagen, Comentario, Etiqueta, 
     Direccion, Especie, Vacuna, EstadoAdopcion, Adopcion, 
-    EvaluacionAdopcion, VisitaAdopcion, VisitaGeneral, Donacion,
+      
     Premio, Ganador, EventoParticipante
 )
 
@@ -43,13 +43,11 @@ class EventoAdmin(admin.ModelAdmin):
             return []
         return [PremioInline]
 
-class DonacionInline(admin.TabularInline):
-    model = Donacion
 
 @admin.register(Persona)
 class PersonaAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'telefono', 'email')
-    inlines = [DireccionInline, DonacionInline]
+    inlines = [DireccionInline]
 
 @admin.register(Especie)
 class EspecieAdmin(admin.ModelAdmin):
@@ -83,18 +81,3 @@ class EstadoAdopcionAdmin(admin.ModelAdmin):
 class AdopcionAdmin(admin.ModelAdmin):
     list_display = ('usuario_adoptante',  'mascota', 'fecha_adopcion', 'estado_adopcion', 'comentarios')
 
-@admin.register(EvaluacionAdopcion)
-class EvaluacionAdopcionAdmin(admin.ModelAdmin):
-    list_display = ('adopcion', 'calificacion', 'comentarios', 'fecha_evaluacion')
-
-@admin.register(VisitaAdopcion)
-class VisitaAdopcionAdmin(admin.ModelAdmin):
-    list_display = ('fecha_visita', 'mascota', 'adoptante', 'asistio')
-
-@admin.register(VisitaGeneral)
-class VisitaGeneralAdmin(admin.ModelAdmin):
-    list_display = ('fecha_visita', 'persona', 'asistio')
-
-@admin.register(Donacion)
-class DonacionAdmin(admin.ModelAdmin):
-    list_display = ('descripcion', 'fecha_donacion', 'persona')

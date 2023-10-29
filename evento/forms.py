@@ -1,12 +1,7 @@
 # forms.py
 
 from django import forms
-from api.models import Donacion, Evento, EventoParticipante, Premio, Ganador 
-
-class DonacionForm(forms.ModelForm):
-    class Meta:
-        model = Donacion
-        fields = ['descripcion', 'fecha_donacion', 'persona']
+from api.models import  Evento, EventoParticipante, Premio, Ganador 
 
 class EventoForm(forms.ModelForm):
     class Meta:

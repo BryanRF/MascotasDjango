@@ -5,30 +5,6 @@
 
 
 <script>
-    const btnParticipar = document.getElementById('ParticiparEvento');
-    const inputCantidad = document.getElementById('inputPickup');
-    btnParticipar.addEventListener('click', function() {
-      const precioParticipacion = parseFloat(btnParticipar.dataset.precio);
-    const cantidad = parseInt(inputCantidad.value);
-  
-      Swal.fire({
-        title: '¿Quieres participar?',
-        text: `El total a pagar será: ${precioParticipacion*cantidad} nuevos soles.`,
-        icon: 'question',
-        confirmButtonColor: '#FFB30E',
-  cancelButtonColor: '#F17228',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, participar',
-        cancelButtonText: 'Cancelar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          const cantidad = inputCantidad;  
-          const usuarioId ={{ user.id }}; 
-          const eventoId ={{ evento.id }};  
-          enviarRegistro(usuarioId, cantidad, total,eventoId);
-        }
-      });
-    });
   
 
   
@@ -69,14 +45,14 @@
           <div class="container">
             <div class="row">
                 <div class="col-lg-6 text-center mx-auto mb-3 mb-md-5 mt-4">
-                    <h5 class="fw-bold text-danger fs-3 fs-lg-5 lh-sm ">Formulario de adopcion general</h5>
+                    <h5 class="fw-bold text-danger fs-3 fs-lg-5 lh-sm ">Formulario de Solicitud de adopcion</h5>
                   </div>
               <div class="col-12">
                 <div class="card card-span mb-3 shadow-lg">
                   <div class="card-body py-0">
                     <div class="row justify-content-center">
                       <div class="col-md-5 col-xl-7 col-xxl-8 g-0 order-0 order-md-1">
-                        <img class="img-fluid w-100 fit-cover h-100 rounded-top rounded-md-end rounded-md-top-0" src="{% static 'assets/img/gallery/pexels-helena-lopes-1938123.jpg' %}" alt="..." />
+                        <img class="img-fluid w-100 fit-cover h-100 rounded-top rounded-md-end rounded-md-top-0" src="{% static 'assets/img/gallery/pexels-helena-lopes-1938123.webp' %}" alt="..." />
                       </div>
                       <div class="col-md-7 col-xl-5 col-xxl-4 p-4 p-lg-5">
                         <form id="formAdopcion" method="post">
@@ -93,16 +69,18 @@
                                 {% endfor %} 
                               </select>
                             </div>
-                            {% comment %} <div class="mb-3">
-                              <label for="fecha_adopcion" class="form-label">Fecha de Adopción</label>
-                              <input type="date" class="form-control" id="fecha_adopcion" name="fecha_adopcion" required>
-                            </div> {% endcomment %}
+
+                            <div class="mb-3">
+                              <label for="fecha_visita" class="form-label">Fecha de Visita</label>
+                              <input type="date" class="form-control" name="fecha_visita" id="fecha_visita">
+                              
+                            </div>
                            
                             <div class="mb-3">
                               <label for="comentarios" class="form-label">Por que quieres adoptar?</label>
                               <textarea class="form-control" id="comentarios" name="comentarios" rows="3"></textarea>
                             </div>
-                            <button type="button" id="enviarSolicitudAdopcion" class="btn btn-primary">Enviar</button>
+                            <button type="button" id="enviarSolicitudAdopcion" class="btn btn-primary">Enviar solicitud</button>
                           </form>
                           
                       </div>
@@ -162,17 +140,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
     enviarSolicitudAdopcion.addEventListener('click', function() {
         const id_usuario = formAdopcion.querySelector('input[name="id_usuario"]').value;
+        const fecha_visita = formAdopcion.querySelector('input[name="fecha_visita"]').value;
         const mascota = formAdopcion.querySelector('select[name="mascota"]').value;
         const comentarios = formAdopcion.querySelector('textarea[name="comentarios"]').value;
 
    
 
-        fetch('/mascota/proceso-adopcion/', {
+        fetch('/adopcion/proceso-adopcion/', {
             method: 'POST',
             body: JSON.stringify({
               id_usuario: id_usuario,
               mascota: mascota,
               comentarios: comentarios,
+              fecha_visita: fecha_visita,
         }),
             headers: {
               'Content-Type': 'application/json',
@@ -182,18 +162,18 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(data => {
             // Verificar si la solicitud fue exitosa
-            if (data.message === 'Enviado') {
+            if (data.estado == true) {
               // Mostrar Sweet Alert de éxito
               Swal.fire({
                 icon: 'success',
-                title: 'Solicitud Enviada',
-                text: 'Su solicitud de adopción ha sido enviada con éxito.'
+                title: 'Exito',
+                text: data.message
               });
-            } else if (data.message === 'Ya tienes una solicitud pendiente para esta mascota') {
+            } else{
               // Mostrar Sweet Alert de error
               Swal.fire({
-                icon: 'info',
-                text: 'Ya tienes una solicitud pendiente para esta mascota.'
+                title: 'Ups!',
+                text: data.message
               });
             }
         })

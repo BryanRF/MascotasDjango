@@ -12,9 +12,12 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
+import environ
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'imagenes_mascotas'),  # Ruta a tu carpeta 'analisis'
 ]
@@ -103,16 +106,16 @@ WSGI_APPLICATION = 'src.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'HOST':'localhost',
-        'PORT':'3306',
-        'USER':'root',
-        'PASSWORD':'',
-        'NAME':'mascotas_db',
-        'OPTIONS':{
-            'init_command':"SET sql_mode='STRICT_TRANS_TABLES'"
+        'ENGINE': env('DB_ENGINE'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'NAME': env('DB_NAME'),
+        'OPTIONS': {
+            'init_command': 'SET sql_mode="STRICT_TRANS_TABLES"',
         },
-        'ATOMIC_REQUESTS': True,  # Habilita transacciones por solicitud
+        'ATOMIC_REQUESTS': env.bool('DB_ATOMIC_REQUESTS', default=True),
     }
 }
 

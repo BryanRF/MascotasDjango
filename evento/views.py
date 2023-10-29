@@ -1,24 +1,10 @@
 # views.py
 import json
 from django.shortcuts import render, redirect
-from .forms import DonacionForm, EventoForm, EventoParticipanteForm, PremioForm, GanadorForm
-from api.models import Donacion, Evento, EventoParticipante, Premio, Ganador,Persona
+from .forms import  EventoForm, EventoParticipanteForm, PremioForm, GanadorForm
+from api.models import  Evento, EventoParticipante, Premio, Ganador,Persona
 from django.http import JsonResponse
 
-# Vistas para Donacion
-def donacion_create(request):
-    if request.method == 'POST':
-        form = DonacionForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('donacion_list')
-    else:
-        form = DonacionForm()
-    return render(request, 'donacion/donacion_form.html', {'form': form})
-
-def donacion_list(request):
-    donaciones = Donacion.objects.all()
-    return render(request, 'donacion/donacion_list.html', {'donaciones': donaciones})
 
 # Vistas para Evento
 def evento_create(request):
@@ -76,6 +62,42 @@ def eventos_usuario_list(request, id_usuario):
     eventos_participados = [participacion.evento for participacion in participaciones]
     contexto = {'eventos_participados': eventos_participados}
     return render(request, 'lista_eventos_usuario.html', contexto)
+
+def eventos_general_list(request, id_usuario):
+    persona = Persona.objects.get(user__id=id_usuario)
+    eventos_participados = EventoParticipante.objects.filter(participante=persona).values_list('evento', flat=True)
+    eventos = Evento.objects.all()
+
+    contexto = {'eventos_participados': eventos_participados, 'eventos': eventos}
+    return render(request, 'lista_eventos_general.html', contexto)
+
+
+def eventos_logeado_list(request, id_usuario):
+    persona = Persona.objects.get(user__id=id_usuario)
+    participaciones = EventoParticipante.objects.filter(participante=persona)
+    eventos_participados = [participacion.evento for participacion in participaciones]
+
+    # Verificar si el usuario participó en cada evento y construir un diccionario
+    eventos_info = []
+    for evento in Evento.objects.all():
+        participo = evento in eventos_participados
+        tiene_premio = evento.tiene_premio
+        lista_premios = ", ".join([premio.nombre for premio in Premio.objects.filter(evento=evento)])
+        finalizo = evento.finalizo
+        ganadores = Ganador.objects.filter(evento=evento)
+
+        eventos_info.append({
+            'evento': evento,
+            'usuario_participo': participo,
+            'tiene_premio': tiene_premio,
+            'lista_premios': lista_premios,
+            'finalizo': finalizo,
+            'ganadores': ganadores
+        })
+
+    contexto = {'eventos_info': eventos_info}
+    return render(request, 'lista_eventos_logeado.html', contexto)
+
 
 def eventos_usuario_info(request, id_usuario):
     try:

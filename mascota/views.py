@@ -13,9 +13,11 @@ def listado(request):
 
 
 def index(request):
-    mascota = Mascota.objects.all().order_by('id')
-    contexto = {'mascotas':mascota}
-    return render(request,'adopcion.html',contexto)
+    # Obtén todas las mascotas que no tienen una adopción en estado "Aprobado"
+    mascotas = Mascota.objects.exclude(adopcion__estado_adopcion__estado='Aprobado').order_by('id')
+    contexto = {'mascotas': mascotas}
+    return render(request, 'adopcion.html', contexto)
+
 
 
 def mascota_view(request):
@@ -80,30 +82,4 @@ def mascota_like(request, id_mascota):
 
 
 
-def proceso_adopcion(request):
-    data = json.loads(request.body)
-    # Obtener datos de la solicitud (id_usuario, mascota, comentarios)
-    id_usuario = data.get('id_usuario')
-    id_mascota = data.get('mascota')
-    comentarios = data.get('comentarios')
-    persona = Persona.objects.get(user__id=id_usuario)
-
-    # Verificar si ya hay una solicitud pendiente para esta mascota y usuario
-    if Adopcion.objects.filter(usuario_adoptante_id=persona.id, mascota_id=id_mascota, estado_adopcion__estado='Pendiente').exists():
-        return JsonResponse({'message': 'Ya tienes una solicitud pendiente para esta mascota'}, status=400)
-
-    # Verificar si la mascota ya tiene una adopción aprobada
-    if Adopcion.objects.filter(mascota_id=id_mascota, estado_adopcion__estado='Aprobada').exists():
-        return JsonResponse({'message': 'Esta mascota ya ha sido adoptada por otra persona'}, status=400)
-
-    # Crear la nueva solicitud de adopción
-    estado_pendiente = EstadoAdopcion.objects.get(estado='Pendiente')
-    Adopcion.objects.create(
-        usuario_adoptante_id=persona.id,
-        mascota_id=id_mascota,
-        estado_adopcion=estado_pendiente,
-        comentarios=comentarios
-    )
-
-    return JsonResponse({'message': 'Enviado'}, status=200)
 

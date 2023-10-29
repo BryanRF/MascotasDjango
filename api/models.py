@@ -133,6 +133,7 @@ class Adopcion(models.Model):
     usuario_adoptante = models.ForeignKey(Persona, on_delete=models.CASCADE, related_name='adopciones_realizadas')
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)
     fecha_adopcion = models.DateField(null=True, blank=True)
+    fecha_visita = models.DateField(null=True, blank=True)
     estado_adopcion = models.ForeignKey(EstadoAdopcion, on_delete=models.CASCADE)
     comentarios = models.TextField()
 
@@ -140,47 +141,6 @@ class Adopcion(models.Model):
         return f'Adopción de {self.mascota.nombre} por {self.usuario_adoptante.nombre}'
 
 
-
-class EvaluacionAdopcion(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
-    adopcion = models.ForeignKey(Adopcion, on_delete=models.CASCADE)
-    calificacion = models.PositiveIntegerField()
-    comentarios = models.TextField()
-    fecha_evaluacion = models.DateField()
-
-    def __str__(self):
-        return f'Evaluación de adopción de {self.adopcion.mascota.nombre} por {self.adopcion.usuario_adoptante.nombre}'
-
-
-class VisitaAdopcion(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
-    fecha_visita = models.DateField()
-    mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)  
-    adoptante = models.ForeignKey(Persona, on_delete=models.CASCADE)  
-    asistio = models.BooleanField(default=False,null=True) 
-
-    def __str__(self):
-        return f"Visita el {self.fecha_visita} de adopción para {self.mascota.nombre} por {self.adoptante.nombre}."
-    
-    
-class VisitaGeneral(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
-    fecha_visita = models.DateField()
-    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
-    asistio = models.BooleanField(default=False,null=True) 
-
-    def __str__(self):
-        return f"Visita el {self.fecha_visita} de {self.persona.nombre} | asistió: {self.persona.asistio}."
-
-
-class Donacion(models.Model):
-    id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
-    descripcion = models.TextField()
-    fecha_donacion = models.DateField()
-    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
-
-    def __str__(self):
-        return f"Donación de {self.persona.nombre} de {self.descripcion} el {self.fecha_donacion}."
     
     
 class Evento(models.Model):
@@ -190,6 +150,8 @@ class Evento(models.Model):
     fecha_fin_participacion = models.DateField()
     costo_participacion = models.DecimalField(max_digits=10, decimal_places=2)
     recaudacion = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    tiene_premio = models.BooleanField(default=False)
+    finalizo = models.BooleanField(default=False)
 
     def __str__(self):
         return f"Evento: {self.nombre} el {self.fecha_inicio}."
@@ -226,7 +188,7 @@ class Premio(models.Model):
 class Ganador(models.Model):
     evento = models.ForeignKey(Evento, on_delete=models.CASCADE)
     premio = models.ForeignKey(Premio, on_delete=models.CASCADE)
-    participante = models.ForeignKey(EventoParticipante, on_delete=models.CASCADE)
+    participante = models.ForeignKey(EventoParticipante, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return f"Ganador: {self.participante.participante.nombre} en Evento: {self.evento.nombre}, Premio: {self.premio.nombre}"
