@@ -1,5 +1,3 @@
-# MascotasDjango
- 
 ¡Por supuesto! Aquí tienes instrucciones detalladas para crear un entorno virtual llamado `entorno`, generar un archivo `requirements.txt` y luego instalar los requisitos desde ese archivo:
 
 ### Paso 1: Crear un Entorno Virtual
